@@ -1,0 +1,24 @@
+{
+    "class_name": "PixelWiseOp",
+    "caption": "PixelWiseOp",
+    "category": "Pixel",
+
+    "inputs": [
+        { "name": "image", "type": "PORT_IN" },
+        { "name": "mask",  "type": "PORT_IN" }
+    ],
+
+    "outputs": [
+        { "name": "out", "type": "PORT_OUT" }
+    ],
+
+    "params": {
+
+        "mode": {
+            "type": "enum",
+            "items": ["Add + ", "Subtract - ", "Multiply * ","Divide / ","AbsDiff ",
+            "Max", "Min","And &", "Or |", "Xor ", "Not", "Min", "Max"],
+            "default": "linear"
+        }
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "class_name": "AddWeighted",
+    "caption": "AddWeighted",
+    "category": "Pixel",
+
+    "inputs": [
+        { "name": "image", "type": "PORT_IN" },
+        { "name": "mask",  "type": "PORT_IN" }
+    ],
+
+    "outputs": [
+        { "name": "out", "type": "PORT_OUT" }
+    ],
+
+    "params": {
+        "ksize": { "type": "int", "default": 5 },
+        "sigma": { "type": "double", "default": 1.2 },
+        "enable": { "type": "bool", "default": true },
+        "text": { "type": "string", "default": "hello" },
+
+        "mode": {
+            "type": "enum",
+            "items": ["nearest", "linear", "cubic"],
+            "default": "linear"
+        }
+    }
+}

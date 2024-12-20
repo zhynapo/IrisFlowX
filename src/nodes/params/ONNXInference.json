@@ -1,0 +1,11 @@
+{
+  "class_name": "ONNXInference",
+  "caption": "ONNX Inference",
+  "category": "DNN",
+  "inputs": [ { "name": "image", "type": "Mat" } ],
+  "outputs": [ { "name": "result", "type": "Mat" } ],
+  "params": {
+    "model_path": { "type": "string", "default": "model.onnx" },
+    "backend": { "type": "enum", "items": ["Default","OpenVINO","CUDA"], "default": "Default" }
+  }
+}

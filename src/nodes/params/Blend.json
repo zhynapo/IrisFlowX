@@ -1,0 +1,19 @@
+{
+  "class_name": "Blend",
+  "caption": "Blend",
+  "category": "Image",
+
+    "inputs": [
+        { "name": "points", "type": "PORT_IN" },
+        { "name": "points", "type": "PORT_IN" }
+    ],
+
+    "outputs": [
+        { "name": "out", "type": "PORT_OUT" }
+    ],
+
+    "params": {
+        "alpha": { "type": "double", "default": 0.5 },
+        "closed": { "type": "bool", "default": true }
+    }
+}

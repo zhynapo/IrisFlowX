@@ -1,0 +1,11 @@
+{
+  "class_name": "SaveImage",
+  "caption": "Save Image",
+  "category": "IO",
+  "inputs": [ { "name": "image", "type": "Mat" } ],
+  "outputs": [],
+  "params": {
+    "path": { "type": "string", "default": "out.png" },
+    "format": { "type": "enum", "items": ["PNG","JPG","BMP"], "default": "PNG" }
+  }
+}

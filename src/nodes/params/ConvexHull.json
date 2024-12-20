@@ -1,0 +1,18 @@
+{
+  "class_name": "ConvexHull",
+  "caption": "ConvexHull",
+  "category": "Contour",
+
+    "inputs": [
+        { "name": "points", "type": "PORT_IN" }
+    ],
+
+    "outputs": [
+        { "name": "out", "type": "PORT_OUT" }
+    ],
+
+    "params": {
+        "epsilon": { "type": "double", "default": 1.0 },
+        "closed": { "type": "bool", "default": true }
+    }
+}

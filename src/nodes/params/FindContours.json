@@ -1,0 +1,11 @@
+{
+  "class_name": "FindContours",
+  "caption": "Find Contours",
+  "category": "Contours",
+  "inputs": [ { "name": "image", "type": "Mat" } ],
+  "outputs": [ { "name": "contours", "type": "Contours" } ],
+  "params": {
+    "mode": { "type": "enum", "items": ["External", "List"], "default": "List" },
+    "method": { "type": "enum", "items": ["ApproxNone", "ApproxSimple"], "default": "ApproxSimple" }
+  }
+}

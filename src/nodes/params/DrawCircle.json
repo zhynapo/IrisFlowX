@@ -1,0 +1,20 @@
+{
+  "class_name": "DrawCircle",
+  "caption": "DrawCircle",
+  "category": "Draw",
+
+    "inputs": [
+        { "name": "mat", "type": "PORT_IN" },
+        { "name": "center", "type": "PORT_IN" },
+        { "name": "radius", "type": "PORT_IN" }
+    ],
+
+    "outputs": [
+        { "name": "mat", "type": "PORT_OUT" }
+    ],
+
+    "params": {
+        "epsilon": { "type": "double", "default": 1.0 },
+        "closed": { "type": "bool", "default": true }
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "class_name": "LoadImage",
+  "caption": "Load Image",
+  "category": "IO",
+  "inputs": [],
+  "outputs": [ { "name": "image", "type": "Mat" } ],
+  "params": {
+    "path": { "type": "string", "default": "" }
+  }
+}

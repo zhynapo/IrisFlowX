@@ -1,0 +1,19 @@
+{
+  "class_name": "MinAreaRect",
+  "caption": "MinAreaRect",
+  "category": "Contour",
+
+    "inputs": [
+        { "name": "points", "type": "PORT_IN" }
+    ],
+
+    "outputs": [
+        { "name": "center", "type": "PORT_OUT" },
+        { "name": "radius", "type": "PORT_OUT" }
+    ],
+
+    "params": {
+        "epsilon": { "type": "double", "default": 1.0 },
+        "closed": { "type": "bool", "default": true }
+    }
+}

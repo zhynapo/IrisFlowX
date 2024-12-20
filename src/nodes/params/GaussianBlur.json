@@ -1,0 +1,10 @@
+{
+  "class_name": "GaussianBlur",
+  "caption": "Gaussian Blur", 
+  "category": "Filter",
+  "inputs": [{"name":"image","type":"PORT_IN"}],
+  "outputs": [{"name":"image","type":"PORT_OUT"}],
+  "params": {
+    "ksize": {"type":"int","default":3, "min":1, "max":31, "step":2}
+  }
+}
