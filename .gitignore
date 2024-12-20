@@ -1,0 +1,9 @@
+
+
+build/
+.vs/
+.vscode/
+contrib/
+samples/data/
+.github/
+temp/
