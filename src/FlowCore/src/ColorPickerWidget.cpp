@@ -1,0 +1,2 @@
+
+#include "widgets/ColorPickerWidget.hpp"
