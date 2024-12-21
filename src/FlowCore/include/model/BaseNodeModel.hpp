@@ -61,7 +61,7 @@ namespace Flow {
         virtual void applyParameter(const QString& name, const QVariant& v);
 
         void setGraphModel(BaseGraphModel* gm) {
-            qDebug() << "graphModel injected!" << gm;
+            //qDebug() << "graphModel injected!" << gm;
 
             _graphModel = gm;
         }

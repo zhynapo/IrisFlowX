@@ -180,25 +180,26 @@ namespace Flow
     {
     public:
         ComboParamEditor(const QStringList& names,
-            const QList<int>& values,
-            int currentValue,
-            QWidget* parent = nullptr)
-            //: IParamEditor(parent)
+                        const QList<int>& values,
+                        int currentValue,
+                        QWidget* parent = nullptr)
+            : QWidget(parent)
         {
-            combo = new QComboBox(parent);
+            combo = new QComboBox(this);
 
+            // 构建带 itemData 的列表（永远正确）
             for (int i = 0; i < names.size(); ++i)
-            {
                 combo->addItem(names[i], values[i]);
-            }
 
+            // 设置初始值
             int idx = combo->findData(currentValue);
             combo->setCurrentIndex(idx >= 0 ? idx : 0);
 
-            // UI → Model（统一出口）
+            // UI → Model （永远传递 itemData，而不是 index）
             connect(combo, qOverload<int>(&QComboBox::currentIndexChanged),
-                this, [this](int v) {
-                    if (onValueChanged) onValueChanged(v); //emit valueChanged(combo->itemData(idx));
+                this, [this](int){
+                    if (onValueChanged)
+                        onValueChanged(combo->currentData());
                 });
         }
 
@@ -207,32 +208,33 @@ namespace Flow
             return combo;
         }
 
+        // 运行时修改 UI 外观，但不修改原始 itemData
         void applyRuntime(const ParamRuntime& rt) override
         {
+            combo->blockSignals(true);
+
             if (rt.enumOptions.has_value())
             {
-                combo->blockSignals(true);
+                // 仅更新名称，不影响内部 value（itemData）
+                auto names = rt.enumOptions.value();
 
-                QStringList names = rt.enumOptions.value();
-                combo->clear();
-
-                // Runtime 下：默认 value = index
-                for (int i = 0; i < names.size(); ++i)
-                {
-                    combo->addItem(names[i], i);
-                }
-
-                combo->blockSignals(false);
+                int n = std::min(int(names.size()), combo->count());
+                for (int i = 0; i < n; ++i)
+                    combo->setItemText(i, names[i]);
             }
 
             combo->setEnabled(rt.enabled);
+            combo->blockSignals(false);
         }
 
+        // Model → UI，用真实值定位
         void setValue(const QVariant& v) override
         {
+            combo->blockSignals(true);
             int idx = combo->findData(v);
             if (idx >= 0)
                 combo->setCurrentIndex(idx);
+            combo->blockSignals(false);
         }
 
     private:

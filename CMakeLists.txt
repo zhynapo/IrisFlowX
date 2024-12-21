@@ -6,9 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
-
-
-include(${PROJECT_SOURCE_DIR}/cmake/add_node_module.cmake)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # 建议：将所有编译产物放在同一个输出目录，解决 Windows 下 DLL 找不到的问题
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -62,6 +60,5 @@ set(IrisX_DIR "C:/Program Files (x86)/IrisX")
 find_package(IrisX REQUIRED)
 message(STATUS ${IrisX_LIBS})
 
-add_subdirectory(src/FlowCore)
-add_subdirectory(src/nodes)
-add_subdirectory(src/app)
+
+add_subdirectory(src)

@@ -30,6 +30,7 @@
 
 //#include "Global.h"
 //#include "global_registry.hpp"
+#include "Categories.h"
 #include "core/IFlowPlugin.h"
 #include "core/PluginLoader.h"
 #include "Common.hpp"
@@ -291,7 +292,12 @@ void MainWindow::createMenus()
     connect(actSaveAs, &QAction::triggered, this, &MainWindow::onSaveGraphAs);
     connect(actQuit, &QAction::triggered, this, &QWidget::close);
 
-    _nodesMenu = menuBar()->addMenu(tr("&Nodes"));
+    //_nodesMenu = menuBar()->addMenu(tr("&Nodes"));
+    _ProcessingMenu = menuBar()->addMenu(CAT_PROCESSING);
+    _AnalyticsMenu = menuBar()->addMenu(CAT_ANALYTICS);
+    _ReasoningMenu = menuBar()->addMenu(CAT_REASONING);
+    _UtilitiesMenu = menuBar()->addMenu(CAT_UTILITIES);
+
     rebuildNodesMenu();
 
     QMenu* viewMenu = menuBar()->addMenu("View");
@@ -304,56 +310,88 @@ void MainWindow::createMenus()
     menu->addAction("Open Subgraph Editor", this, &MainWindow::openSubgraphEditor);
 }
 
-void MainWindow::rebuildNodesMenu()
+QMenu* ensureMenuPath(QMenu* root, const QString& path)
 {
-    _nodesMenu->clear();
+    QStringList parts = path.split("/", Qt::SkipEmptyParts);
+    QMenu* current = root;
 
-    auto cats = _registry->categories();
-    auto assoc = _registry->registeredModelsCategoryAssociation();
-    auto creators = _registry->registeredModelCreators();
-
-    if (!cats.empty()) {
-        for (auto const& cat : cats) {
-
-            // ⭐ 忽略 "__internal__" 分类
-            if (cat.startsWith("__internal__"))
-                continue;
-
-            auto* sub = _nodesMenu->addMenu(cat);
-
-            for (auto const& kv : creators) {
-                const QString& name = kv.first;
-
-                auto it = assoc.find(name);
-                if (it != assoc.end()) {
-
-                    // ⭐ 同样过滤内部节点
-                    if (it->second.startsWith("__internal__"))
-                        continue;
-
-                    if (it->second == cat) {
-                        auto* act = sub->addAction(name);
-                        connect(act, &QAction::triggered, this, &MainWindow::onAddNodeByName);
-                    }
-                }
+    for (const QString& p : parts)
+    {
+        // 查找是否已有同名 menu
+        QMenu* next = nullptr;
+        for (auto* act : current->actions())
+        {
+            if (auto* m = act->menu(); m && m->title() == p) {
+                next = m;
+                break;
             }
         }
+
+        // 没有则创建
+        if (!next)
+            next = current->addMenu(p);
+
+        current = next;
     }
-    else {
-        for (auto const& kv : creators) {
-            const QString& name = kv.first;
 
-            // ⭐ 没分类时也要过滤
-            auto it = assoc.find(name);
-            if (it != assoc.end() && it->second.startsWith("__internal__"))
-                continue;
+    return current;
+}
+void MainWindow::rebuildNodesMenu()
+{
+    // 清空三个一级菜单，但不删除它们
+    _ProcessingMenu->clear();
+    _AnalyticsMenu->clear();
+    _ReasoningMenu->clear();
+    _UtilitiesMenu->clear();
 
-            auto* act = _nodesMenu->addAction(name);
-            connect(act, &QAction::triggered, this, &MainWindow::onAddNodeByName);
+    auto creators = _registry->registeredModelCreators();
+    auto assoc = _registry->registeredModelsCategoryAssociation();
+
+    for (auto const& kv : creators)
+    {
+        const QString& modelName = kv.first;
+
+        auto it = assoc.find(modelName);
+        if (it == assoc.end())
+            continue;
+
+        QString category = it->second;
+
+        if (category.startsWith("__internal__"))
+            continue;
+
+        // 分割分类结构
+        QStringList parts = category.split("/", Qt::SkipEmptyParts);
+        if (parts.isEmpty())
+            continue;
+
+        QString top = parts.takeFirst(); // Process / Analysis / Others
+
+        // 找到对应的一级菜单
+        QMenu* root = nullptr;
+        if (top == CAT_PROCESSING ||  top == "proc")
+            root = _ProcessingMenu;
+        else if (top == CAT_ANALYTICS || top == "analy")
+            root = _AnalyticsMenu;
+        else if (top == CAT_REASONING || top == "reason")
+            root = _ReasoningMenu;
+        else if (top == CAT_UTILITIES || top == "util")
+            root = _UtilitiesMenu;
+        else
+            root = _UtilitiesMenu; // 默认 Utilities
+        // 去掉一级分类后剩下的路径
+        QString subPath = parts.join("/");
+
+        QMenu* targetMenu = root;
+
+        if (!subPath.isEmpty()) {
+            targetMenu = ensureMenuPath(root, subPath);
         }
+
+        QAction* act = targetMenu->addAction(modelName);
+        connect(act, &QAction::triggered, this, &MainWindow::onAddNodeByName);
     }
 }
-
 void MainWindow::addNodeByName(const QString& name)
 {
     _graphModel->addNode(name);

@@ -18,7 +18,8 @@ target_include_directories(IrisFlowApp
 target_link_libraries(IrisFlowApp
     PRIVATE
         FlowCore 
-        nodes_image  # 链接具体的节点库
+#        nodes_image  # 链接具体的节点库
+        common
         Qt6::Core
         Qt6::Gui
         Qt6::Widgets

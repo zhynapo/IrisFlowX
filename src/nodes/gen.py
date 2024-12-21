@@ -172,11 +172,7 @@ def build_ports(port_list, is_input=True):
 
 # ---------------- templates (double braces for literal braces) ----------------
 HPP_TMPL = r'''#pragma once
-#include "model/BaseNodeModel.hpp"
-#include "base/MatNodeData.hpp"
-#include <opencv2/opencv.hpp>
-
-using namespace Flow;
+#include "processing.h"
 
 class {CLASS} : public BaseNodeModel
 {{

@@ -41,10 +41,6 @@ function(add_node_module targetName)
         # if arg refers to an existing directory under CMAKE_CURRENT_SOURCE_DIR, treat it as source dir
         if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${arg}")
             list(APPEND source_dirs "${CMAKE_CURRENT_SOURCE_DIR}/${arg}")
-            # also proactively add its include/ folder to include_dirs if present
-            if(IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${arg}/include")
-                list(APPEND include_dirs "${CMAKE_CURRENT_SOURCE_DIR}/${arg}/include")
-            endif()
         else()
             list(APPEND extra_libs_list ${arg})
         endif()
@@ -74,10 +70,6 @@ function(add_node_module targetName)
     foreach(d IN LISTS source_dirs)
         if(EXISTS "${d}")
             list(APPEND include_dirs "${d}")
-            # if this source dir has an 'include' subdirectory, also add it
-            if(IS_DIRECTORY "${d}/include")
-                list(APPEND include_dirs "${d}/include")
-            endif()
         endif()
     endforeach()
     target_include_directories(${targetBase} PRIVATE ${include_dirs})
@@ -99,9 +91,9 @@ function(add_node_module targetName)
     add_custom_command(TARGET ${targetBase} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory
                 "${CMAKE_BINARY_DIR}/bin/${CMAKE_CFG_INTDIR}/plugins/nodes"
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        COMMAND ${CMAKE_COMMAND} -E rename 
                 "$<TARGET_FILE:${targetBase}>"
-                "${CMAKE_BINARY_DIR}/bin/${CMAKE_CFG_INTDIR}/plugins/nodes/"
+                "${CMAKE_BINARY_DIR}/bin/${CMAKE_CFG_INTDIR}/plugins/nodes/$<TARGET_FILE_NAME:${targetBase}>"
         COMMENT "Copying ${targetBase} to plugins/nodes"
     )
 
@@ -111,10 +103,10 @@ function(add_node_module targetName)
         add_custom_command(TARGET ${targetBase} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E make_directory
                     "${CMAKE_BINARY_DIR}/bin/${CMAKE_CFG_INTDIR}/plugins/nodes/${targetPath}"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                    "$<TARGET_FILE:${targetBase}>"
-                    "${CMAKE_BINARY_DIR}/bin/${CMAKE_CFG_INTDIR}/plugins/nodes/${targetPath}/"
-            COMMENT "Copying ${targetBase} to plugins/nodes/${targetPath}"
+            COMMAND ${CMAKE_COMMAND} -E rename
+                    "${CMAKE_BINARY_DIR}/bin/${CMAKE_CFG_INTDIR}/plugins/nodes/$<TARGET_FILE_NAME:${targetBase}>"
+                    "${CMAKE_BINARY_DIR}/bin/${CMAKE_CFG_INTDIR}/plugins/nodes/${targetPath}/$<TARGET_FILE_NAME:${targetBase}>"
+            COMMENT "Moving ${targetBase} to plugins/nodes/${targetPath}"
         )
     endif()
 endfunction()

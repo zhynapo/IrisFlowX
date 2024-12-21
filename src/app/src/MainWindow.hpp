@@ -57,7 +57,12 @@ private:
     QtNodes::GraphicsView* _view = nullptr;
 
     QMenu* _fileMenu = nullptr;
-    QMenu* _nodesMenu = nullptr;
+    
+    QMenu* _ProcessingMenu = nullptr;//     ← 图像 / AI 算子
+    QMenu* _AnalyticsMenu = nullptr;      // ← 统计 / 测量 / 分析
+    QMenu* _ReasoningMenu = nullptr;      // ← Insight + Decision（解释与判断）
+    QMenu* _UtilitiesMenu = nullptr;      // ← 工具
+
     QAction* _actLightTheme = nullptr;
     QAction* _actDarkTheme = nullptr;
 
