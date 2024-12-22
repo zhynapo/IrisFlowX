@@ -1,0 +1,12 @@
+{
+  "class_name": "Test",
+  "caption": "Test",
+  "category": "CAT_PROC_FILTER",
+  "inputs": [ { "name": "image", "type": "Mat" } ],
+  "outputs": [ { "name": "image", "type": "Mat" } ],
+  "params": {
+    "thresh": { "type": "int", "default": 128, "min": 0, "max": 255 },
+    "maxval": { "type": "int", "default": 255, "min": 0, "max": 255 },
+    "type": { "type": "enum", "items": ["Binary","BinaryInv","Trunc","ToZero","ToZeroInv"], "default": "Binary" }
+  }
+}

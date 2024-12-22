@@ -22,9 +22,9 @@ namespace Flow
     {
     public:
         IntParamEditor(int v, int minV, int maxV, int step, QWidget* parent = nullptr)
-            //: IParamEditor(parent)
+            : QWidget(parent), step(step)
         {
-            panel = new QWidget(parent);
+            panel = new QWidget(this);
             auto* layout = new QHBoxLayout(panel);
             layout->setContentsMargins(0, 0, 0, 0);
 
@@ -33,8 +33,9 @@ namespace Flow
 
             sp->setRange(minV, maxV);
             sl->setRange(minV, maxV);
+
             sp->setSingleStep(step);
-            sl->setSingleStep(step);
+            sl->setSingleStep(step);   // 只对键盘有效，对拖动无效
 
             sp->setValue(v);
             sl->setValue(v);
@@ -42,21 +43,53 @@ namespace Flow
             layout->addWidget(sp);
             layout->addWidget(sl);
 
-            // 内部同步
-            connect(sp, qOverload<int>(&QSpinBox::valueChanged),
-                sl, &QSlider::setValue);
-            connect(sl, &QSlider::valueChanged,
-                sp, &QSpinBox::setValue);
+            //--------------------------------------------------
+            // Internal Sync (Slider → SpinBox) with step enforcing
+            //--------------------------------------------------
+            connect(sl, &QSlider::valueChanged, this, [this](int v){
+                int fixed = alignToStep(v);
+                if (fixed != v)
+                {
+                    sl->blockSignals(true);
+                    sl->setValue(fixed);
+                    sl->blockSignals(false);
+                }
 
-            // UI → Model（统一出口）
-            connect(sp, qOverload<int>(&QSpinBox::valueChanged),
-                this, [this](int v) {
-                    if (onValueChanged) onValueChanged(v);//emit valueChanged(v);
-                });
+                sp->blockSignals(true);
+                sp->setValue(fixed);
+                sp->blockSignals(false);
+
+                if (onValueChanged) onValueChanged(fixed);
+            });
+
+            //--------------------------------------------------
+            // Internal Sync (SpinBox → Slider) with step enforcing
+            //--------------------------------------------------
+            connect(sp, qOverload<int>(&QSpinBox::valueChanged), this, [this](int v){
+                int fixed = alignToStep(v);
+                if (fixed != v)
+                {
+                    sp->blockSignals(true);
+                    sp->setValue(fixed);
+                    sp->blockSignals(false);
+                }
+
+                sl->blockSignals(true);
+                sl->setValue(fixed);
+                sl->blockSignals(false);
+
+                if (onValueChanged) onValueChanged(fixed);
+            });
         }
 
-        QWidget* widget() override { return panel; }
+        QWidget* widget() override 
+        { 
+            return panel; 
+        }
 
+        //------------------------------------------------------
+        // Runtime UI update: range / step / enable
+        //------------------------------------------------------
         void applyRuntime(const ParamRuntime& rt) override
         {
             if (rt.min && rt.max)
@@ -64,26 +97,51 @@ namespace Flow
                 sp->setRange((int)*rt.min, (int)*rt.max);
                 sl->setRange((int)*rt.min, (int)*rt.max);
             }
+
             if (rt.step)
             {
-                int st = std::max(1, (int)*rt.step);
-                sp->setSingleStep(st);
-                sl->setSingleStep(st);
+                step = std::max(1, (int)*rt.step);
+                sp->setSingleStep(step);
+                // slider 无法做到拖动步进，只能在 valueChanged 手动控制
             }
+
             panel->setEnabled(rt.enabled);
         }
 
+        //------------------------------------------------------
+        // Model → UI
+        //------------------------------------------------------
         void setValue(const QVariant& v) override
         {
-            int i = v.toInt();
-            sp->setValue(i);
-            sl->setValue(i);
+            int val = alignToStep(v.toInt());
+
+            sp->blockSignals(true);
+            sl->blockSignals(true);
+
+            sp->setValue(val);
+            sl->setValue(val);
+
+            sp->blockSignals(false);
+            sl->blockSignals(false);
+        }
+
+    private:
+
+        //------------------------------------------------------
+        // Ensures the value respects the step constraint
+        //------------------------------------------------------
+        int alignToStep(int v) const
+        {
+            if (step <= 1) return v;
+            int base = sp->minimum();
+            return base + ((v - base) / step) * step;
         }
 
     private:
         QWidget* panel = nullptr;
         QSpinBox* sp = nullptr;
         QSlider* sl = nullptr;
+        int step = 1;
     };
 
     // ========================================================================

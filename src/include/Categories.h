@@ -23,14 +23,14 @@ static const QString CAT_PROC_BASIC =
     "Processing/BasicOps";
 
 // ---- Filtering ----
-static const QString CAT_PROC_FILTERING =
-    "Processing/Filtering";
+static const QString CAT_PROC_FILTER =
+    "Processing/Filter";
 
 static const QString CAT_PROC_FILTER_SMOOTH =
-    "Processing/Filtering/Smooth";
+    "Processing/Filter/Smooth";
 
 static const QString CAT_PROC_FILTER_SHARPEN =
-    "Processing/Filtering/Sharpen";
+    "Processing/Filter/Sharpen";
 
 // ---- Morphology ----
 static const QString CAT_PROC_MORPH =

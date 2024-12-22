@@ -13,7 +13,11 @@
 
 #include "geometry/ResizeNode.hpp"
 
+#include "filter/AlphaTest.hpp"
 #include "filter/GaussianBlur.hpp"
+#include "filter/MedianBlur.hpp"
+#include "filter/BilateralFilter.hpp"
+#include "filter/Test.hpp"
 
 #include "morph/MorphologyNode.hpp"
 #include "morph/ErodeNode.hpp"
@@ -44,7 +48,11 @@ extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* c
     REGISTER_NODE_IN_PLUGIN(ResizeNode);
 
     //filter
+    REGISTER_NODE_IN_PLUGIN(Test);
+    REGISTER_NODE_IN_PLUGIN(AlphaTest);
     REGISTER_NODE_IN_PLUGIN(GaussianBlur);
+    REGISTER_NODE_IN_PLUGIN(MedianBlur);
+    REGISTER_NODE_IN_PLUGIN(BilateralFilter);
 
     //morph
     REGISTER_NODE_IN_PLUGIN(MorphologyNode);

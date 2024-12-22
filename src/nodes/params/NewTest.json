@@ -1,0 +1,11 @@
+{
+  "class_name": "NewTest",
+  "caption": "NewTest",
+  "category": "CAT_PROC_FILTER",
+  "inputs": [ { "name": "image", "type": "Mat" } ],
+  "outputs": [ { "name": "image", "type": "Mat" } ],
+  "params": {
+    "thresh": { "type": "int", "default": 100, "min": 0, "max": 255 },
+    "maxval": { "type": "int", "default": 200, "min": 0, "max": 255 }
+  }
+}

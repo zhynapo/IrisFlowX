@@ -1,21 +1,21 @@
 #pragma once
 #include "processing.h"
 
-
-class GaussianBlur : public BaseNodeModel
+class BilateralFilter : public BaseNodeModel
 {
     Q_OBJECT
-
 public:
-    GaussianBlur();
+    BilateralFilter();
     static const NodeDesc desc;
+    ~BilateralFilter() override = default;
 
+    // ---- Processing ----
 protected:
     void process() override;
 
-    //int _kernelSize = 3;
-    //double _sigma = 1.0;
-    bool _normalize = false;
+private:
     cv::Mat _input;
     cv::Mat _output;
+
+    int _ksize = 3;
 };

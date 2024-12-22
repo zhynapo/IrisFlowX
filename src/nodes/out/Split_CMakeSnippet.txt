@@ -1,4 +1,0 @@
-# CMake snippet: add a shared library target for this node
-# add_library(Split SHARED Split.cpp Split.hpp)
-# target_link_libraries(... PRIVATE FlowCore nodes_common_headers)
-# Optionally add POST_BUILD copy to ${CMAKE_BINARY_DIR}/bin/${CMAKE_CFG_INTDIR}/plugins/nodes

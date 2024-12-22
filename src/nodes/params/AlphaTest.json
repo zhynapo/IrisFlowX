@@ -1,0 +1,10 @@
+{
+  "class_name": "AlphaTest",
+  "caption": "AlphaTest",
+  "category": "CAT_PROC_FILTER",
+  "inputs": [ { "name": "image", "type": "Mat" } ],
+  "outputs": [ { "name": "image", "type": "Mat" } ],
+  "params": {
+    "alpha": { "type": "double", "default": 0.5, "min": 0.0, "max": 1.0 }
+  }
+}

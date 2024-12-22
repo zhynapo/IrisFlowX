@@ -1,21 +1,22 @@
 #pragma once
 #include "processing.h"
 
-
-class GaussianBlur : public BaseNodeModel
+class Test : public BaseNodeModel
 {
     Q_OBJECT
-
 public:
-    GaussianBlur();
+    Test();
     static const NodeDesc desc;
+    ~Test() override = default;
 
 protected:
     void process() override;
 
-    //int _kernelSize = 3;
-    //double _sigma = 1.0;
-    bool _normalize = false;
+private:
     cv::Mat _input;
     cv::Mat _output;
+
+    int _thresh = 128;
+    int _maxval = 255;
+    int _type = 0;
 };
