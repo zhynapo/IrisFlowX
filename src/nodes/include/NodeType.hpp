@@ -21,5 +21,6 @@ namespace NodeType
     static inline const NodeDataType Contours = { "contours", "Contours" };
     static inline const NodeDataType RotatedRect = { "rotatedrect", "RotatedRect" };
 
+    static inline const NodeDataType VisionGeometry = { "visionGeometry", "VisionGeometry" };
 }
 
