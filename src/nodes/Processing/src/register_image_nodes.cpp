@@ -26,6 +26,7 @@
 #include "draw/DrawCircle.hpp"
 #include "draw/DrawRotatedRect.hpp"
 #include "draw/DrawContourNode.hpp"
+#include "draw/DrawGeometry.hpp"
 extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* ctx)
 {
     if (ctx->abi_version != FLOW_ABI_VERSION)
@@ -63,6 +64,7 @@ extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* c
     REGISTER_NODE_IN_PLUGIN(DrawCircle);
     REGISTER_NODE_IN_PLUGIN(DrawRotatedRect);
     REGISTER_NODE_IN_PLUGIN(DrawContourNode);
+    REGISTER_NODE_IN_PLUGIN(DrawGeometry);
 
     return true;
 }

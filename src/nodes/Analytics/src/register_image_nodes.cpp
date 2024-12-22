@@ -10,6 +10,7 @@
 #include "Contours/MinEnclosingCircle.hpp"
 #include "Contours/MinAreaRect.hpp"
 #include "Contours/PolygonApprox.hpp"
+#include "features/MomentsNode.hpp"
 
 
 extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* ctx)
@@ -28,6 +29,9 @@ extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* c
     REGISTER_NODE_IN_PLUGIN(MinEnclosingCircle);
     REGISTER_NODE_IN_PLUGIN(MinAreaRect);
     REGISTER_NODE_IN_PLUGIN(PolygonApprox);
+
+    //features
+    REGISTER_NODE_IN_PLUGIN(MomentsNode);
 
     return true;
 }

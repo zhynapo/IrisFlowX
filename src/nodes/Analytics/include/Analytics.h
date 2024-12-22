@@ -5,6 +5,7 @@
 #include "base/MatNodeData.hpp"
 #include "base/ContoursNodeData.hpp"
 #include "base/PointsNodeData.hpp"
+#include "base/VisionGeometryNodeData.hpp"
 #include "NodeType.hpp"
 #include "utils.hpp"
 using namespace Flow;

@@ -12,8 +12,9 @@ const NodeDesc MinEnclosingCircle::desc =
 
     // outputs
     {
-        PortDesc::Out("center", NodeType::Point),
-        PortDesc::Out("radius", NodeType::Float)
+        PortDesc::Out("moments", NodeType::VisionGeometry)
+        //PortDesc::Out("center", NodeType::Point),
+        //PortDesc::Out("radius", NodeType::Float)
     },
 
     // parameters
@@ -46,18 +47,27 @@ void MinEnclosingCircle::process()
     }
 
     // TODO: implement algorithm
-    _output = _input.clone();
+    auto geom = std::make_shared<VisionGeometryNodeData>();
+
+    geom->typeValue = VisionGeometryNodeData::Type::Circle;
+    geom->valid = false;   // 先设为 false
+    geom->contour = contour;
+
     cv::Point2f center;
     float radius;
     if (contour.size() < 3) {
-        center = cv::Point2f(0, 0);
-        radius = 0.f;
+        geom->valid = true;
+        geom->center = cv::Point2f(0, 0);
+        geom->radius = 0.f;
         return;
     }
 
     cv::minEnclosingCircle(contour, center, radius);
 
+    geom->valid = true;
+    geom->center = center;
+    geom->radius = radius;
 
-    setOutputData(0, std::make_shared<PointNodeData>(center));
-    setOutputData(1, std::make_shared<NumberNodeData>(radius));
+    setOutputData(0, geom);
+    
 }

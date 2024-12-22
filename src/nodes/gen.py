@@ -69,6 +69,7 @@ PORT_TYPE_MAP = {
     "Contours": "NodeType::Contours",
     "KeyPoints": "NodeType::KeyPoints",
     "Rect": "NodeType::Rect",
+    "VisionGeometry": "NodeType::VisionGeometry"
     # add more mappings if needed...
 }
 

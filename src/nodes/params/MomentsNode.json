@@ -1,0 +1,19 @@
+{
+  "class_name": "MomentsNode",
+  "caption": "Moments Calculation",
+  "category": "CAT_ANALY_FEATURES",
+
+  "inputs": [
+    { "name": "image", "type": "Mat" }
+  ],
+
+  "outputs": [
+    { "name": "HuMoments", "type": "Mat" },
+    { "name": "SpatialMoments", "type": "Mat" }
+  ],
+
+  "params": {
+    "binary": { "type": "bool", "default": false },
+    "normalize": { "type": "bool", "default": true }
+  }
+}
