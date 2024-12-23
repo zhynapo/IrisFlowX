@@ -1,0 +1,69 @@
+{
+  "name": "GfttCorner",
+  "caption": "GFTT Corner Detector",
+  "category": "Analytics/Features",
+  "inputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    },
+    {
+      "name": "corners",
+      "type": "VisionGeometry"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "maxCorners",
+      "caption": "Max Corners",
+      "type": "int",
+      "default": 1000,
+      "min": 1,
+      "max": 5000
+    },
+    {
+      "name": "qualityLevel",
+      "caption": "Quality Level",
+      "type": "double",
+      "default": 0.01,
+      "min": 0.001,
+      "max": 0.1
+    },
+    {
+      "name": "minDistance",
+      "caption": "Min Distance",
+      "type": "double",
+      "default": 1.0,
+      "min": 0.1,
+      "max": 50.0
+    },
+    {
+      "name": "blockSize",
+      "caption": "Block Size",
+      "type": "int",
+      "default": 3,
+      "min": 1,
+      "max": 10
+    },
+    {
+      "name": "useHarris",
+      "caption": "Use Harris",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "harrisK",
+      "caption": "Harris K",
+      "type": "double",
+      "default": 0.04,
+      "min": 0.01,
+      "max": 0.2
+    }
+  ]
+}

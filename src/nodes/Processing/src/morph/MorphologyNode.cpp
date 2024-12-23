@@ -47,7 +47,7 @@ const NodeDesc MorphologyNode::desc =
             cv::MORPH_RECT),
 
         ParamDesc::makeInt("ksize", "Kernel Size", 3)
-            .setRange(1, 81)
+            .range(1, 81)
             .setStep(2)      // 形态学核建议奇数
     }
 };

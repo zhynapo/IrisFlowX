@@ -1,0 +1,59 @@
+{
+  "name": "SurfFeature",
+  "caption": "SURF Feature Detector",
+  "category": "Analytics/Features",
+  "inputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    },
+    {
+      "name": "features",
+      "type": "VisionGeometry"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "hessianThreshold",
+      "caption": "Hessian Threshold",
+      "type": "double",
+      "default": 100.0,
+      "min": 1.0,
+      "max": 1000.0
+    },
+    {
+      "name": "nOctaves",
+      "caption": "Number of Octaves",
+      "type": "int",
+      "default": 4,
+      "min": 1,
+      "max": 6
+    },
+    {
+      "name": "nOctaveLayers",
+      "caption": "Octave Layers",
+      "type": "int",
+      "default": 3,
+      "min": 1,
+      "max": 10
+    },
+    {
+      "name": "extended",
+      "caption": "Extended Descriptors",
+      "type": "bool",
+      "default": false
+    },
+    {
+      "name": "upright",
+      "caption": "Upright Features",
+      "type": "bool",
+      "default": false
+    }
+  ]
+}

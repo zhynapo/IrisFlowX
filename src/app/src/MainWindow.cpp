@@ -149,76 +149,21 @@ MainWindow::MainWindow(QWidget* parent)
     // 在 MainWindow 构造函数中
     _view->viewport()->installEventFilter(this);
 
-    // 左侧 Dock（按钮添加节点）
-    _leftDock = new QDockWidget(tr("Settings"), this);
+    // 左侧 Dock（节点菜单将通过rebuildNodesMenu()自动填充）
+    _leftDock = new QDockWidget(tr("Node Library"), this);
     auto* dockWidget = new QWidget(_leftDock);
     auto* v = new QVBoxLayout(dockWidget);
+    
+    // 添加一些通用操作按钮
     auto* btnAddLoader = new QPushButton(tr("Add ImageLoader"));
-    auto* btnAddGaussian = new QPushButton(tr("Add Gaussian"));
-    auto* btnAddThreshold = new QPushButton(tr("Add Threshold"));
     auto* btnAddViewer = new QPushButton(tr("Add ImageShow"));
-    auto* addGaussianBtn = new QPushButton("Add Gaussian Node");
-    auto* addDynamic = new QPushButton("Add Dynamic Node");
-    auto* addtest = new QPushButton("Add test Node");
-
     connect(btnAddLoader, &QPushButton::clicked, this, [this] { addNodeByName("ImageLoaderModel"); });
-    connect(btnAddGaussian, &QPushButton::clicked, this, [this] { addNodeByName("GaussianModel"); });
-    connect(btnAddThreshold, &QPushButton::clicked, this, [this] { addNodeByName("Threshold"); });
     connect(btnAddViewer, &QPushButton::clicked, this, [this] { addNodeByName("ImageShowModel"); });
-    connect(addGaussianBtn, &QPushButton::clicked, this, [this] { addNodeByName("GenericNodeModel"); });
-    connect(addtest, &QPushButton::clicked, this, [this] { addNodeByName("test"); });
-    connect(addDynamic, &QPushButton::clicked, this, [this] { addNodeByName("ComCoin"); });
-
+    
     v->addWidget(btnAddLoader);
-    v->addWidget(btnAddGaussian);
-    v->addWidget(btnAddThreshold);
     v->addWidget(btnAddViewer);
-    v->addWidget(addGaussianBtn);
-    v->addWidget(addDynamic);
-    v->addWidget(addtest);
-
-    auto* add_mark = new QPushButton("Add mark Node");
-    connect(add_mark, &QPushButton::clicked, this, [this] { addNodeByName("mark"); });
-    v->addWidget(add_mark);
-
-    auto* add_ImageCropNodeModel = new QPushButton("Add ImageCropNodeModel Node");
-    connect(add_ImageCropNodeModel, &QPushButton::clicked, this, [this] { addNodeByName("ImageCropNodeModel"); });
-    v->addWidget(add_ImageCropNodeModel);
-
-    auto* add_RectNodeModel = new QPushButton("Add RectNodeModel Node");
-    connect(add_RectNodeModel, &QPushButton::clicked, this, [this] { addNodeByName("RectNodeModel"); });
-    v->addWidget(add_RectNodeModel);
-
-    auto* add_FindContoursNodeModel = new QPushButton("Add FindContoursNodeModel Node");
-    connect(add_FindContoursNodeModel, &QPushButton::clicked, this, [this] { addNodeByName("FindContoursNodeModel"); });
-    v->addWidget(add_FindContoursNodeModel);
-
-    auto* add_ContoursSelectNodeModel = new QPushButton("Add ContoursSelectNodeModel Node");
-    connect(add_ContoursSelectNodeModel, &QPushButton::clicked, this, [this] { addNodeByName("ContoursSelectNodeModel"); });
-    v->addWidget(add_ContoursSelectNodeModel);
-
-    auto* add_DrawContourNodeModel = new QPushButton("Add DrawContourNodeModel Node");
-    connect(add_DrawContourNodeModel, &QPushButton::clicked, this, [this] { addNodeByName("DrawContourNodeModel"); });
-    v->addWidget(add_DrawContourNodeModel);
+    v->addStretch(1); // 使按钮保持在顶部，菜单项在下面
     
-    auto* add_ContourAreaNodeModel = new QPushButton("Add ContourAreaNodeModel Node");
-    connect(add_ContourAreaNodeModel, &QPushButton::clicked, this, [this] { addNodeByName("ContourAreaNodeModel"); });
-    v->addWidget(add_ContourAreaNodeModel);
-    
-    auto* add_FitEllipseNodeModel = new QPushButton("Add FitEllipseNodeModel Node");
-    connect(add_FitEllipseNodeModel, &QPushButton::clicked, this, [this] { addNodeByName("FitEllipseNodeModel"); });
-    v->addWidget(add_FitEllipseNodeModel);
-
-    auto* add_BoundingRectNodeModel = new QPushButton("Add BoundingRectNodeModel Node");
-    connect(add_BoundingRectNodeModel, &QPushButton::clicked, this, [this] { addNodeByName("BoundingRectNodeModel"); });
-    v->addWidget(add_BoundingRectNodeModel);
-    
-    auto* add_DrawOverlayNode = new QPushButton("Add DrawOverlayNode Node");
-    connect(add_DrawOverlayNode, &QPushButton::clicked, this, [this] { addNodeByName("DrawOverlayNode"); });
-    v->addWidget(add_DrawOverlayNode);
-
-
-    v->addStretch(1);
     dockWidget->setLayout(v);
     _leftDock->setWidget(dockWidget);
     addDockWidget(Qt::LeftDockWidgetArea, _leftDock);

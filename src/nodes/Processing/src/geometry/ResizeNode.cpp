@@ -11,11 +11,11 @@ const NodeDesc ResizeNode::desc =
     { PortDesc::Out("mat", NodeType::Mat) },
     {
         ParamDesc::makeDouble("scaleX", "Scale X", 1.0)
-            .setRange(0.01, 100.0)
+            .range(0.01, 100.0)
             .setStep(0.01),
 
         ParamDesc::makeDouble("scaleY", "Scale Y", 1.0)
-            .setRange(0.01, 100.0)
+            .range(0.01, 100.0)
             .setStep(0.01),
 
         ParamDesc::makeCombo(
@@ -38,11 +38,11 @@ QVector<ParamDesc> ResizeNode::parameters() const
 {
     return {
         ParamDesc::makeDouble("scaleX", "Scale X", 1.0)
-            .setRange(0.01, 100.0)
+            .range(0.01, 100.0)
             .setStep(0.01),
 
         ParamDesc::makeDouble("scaleY", "Scale Y", 1.0)
-            .setRange(0.01, 100.0)
+            .range(0.01, 100.0)
             .setStep(0.01),
 
         ParamDesc::makeCombo(

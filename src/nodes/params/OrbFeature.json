@@ -1,0 +1,95 @@
+{
+  "name": "OrbFeature",
+  "caption": "ORB Feature Detector",
+  "category": "Analytics/Features",
+  "inputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    },
+    {
+      "name": "features",
+      "type": "VisionGeometry"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "nFeatures",
+      "caption": "Number of Features",
+      "type": "int",
+      "default": 500,
+      "min": 1,
+      "max": 10000
+    },
+    {
+      "name": "scaleFactor",
+      "caption": "Scale Factor",
+      "type": "double",
+      "default": 1.2,
+      "min": 1.0,
+      "max": 2.0
+    },
+    {
+      "name": "nLevels",
+      "caption": "Number of Levels",
+      "type": "int",
+      "default": 8,
+      "min": 1,
+      "max": 16
+    },
+    {
+      "name": "edgeThreshold",
+      "caption": "Edge Threshold",
+      "type": "int",
+      "default": 31,
+      "min": 1,
+      "max": 100
+    },
+    {
+      "name": "firstLevel",
+      "caption": "First Level",
+      "type": "int",
+      "default": 0,
+      "min": 0,
+      "max": 5
+    },
+    {
+      "name": "wtaK",
+      "caption": "WTA K",
+      "type": "int",
+      "default": 2,
+      "min": 2,
+      "max": 4
+    },
+    {
+      "name": "scoreType",
+      "caption": "Score Type (0-Harris, 1-FAST)",
+      "type": "int",
+      "default": 0,
+      "min": 0,
+      "max": 1
+    },
+    {
+      "name": "patchSize",
+      "caption": "Patch Size",
+      "type": "int",
+      "default": 31,
+      "min": 1,
+      "max": 100
+    },
+    {
+      "name": "fastThreshold",
+      "caption": "FAST Threshold",
+      "type": "int",
+      "default": 20,
+      "min": 1,
+      "max": 100
+    }
+  ]
+}

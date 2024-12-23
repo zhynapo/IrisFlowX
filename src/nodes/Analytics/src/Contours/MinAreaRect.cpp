@@ -13,7 +13,7 @@ const NodeDesc MinAreaRect::desc =
 
     // outputs
     {
-        PortDesc::Out("rotaterect", NodeType::RotatedRect)
+        PortDesc::Out("moments", NodeType::VisionGeometry)
     },
 
     // parameters
@@ -43,8 +43,15 @@ void MinAreaRect::process()
         setOutputData(0, nullptr);
         return;
     }
-    
-    cv::RotatedRect rr = cv::minAreaRect(contour);
+    auto geom = std::make_shared<VisionGeometryNodeData>();
 
-    setOutputData(0, std::make_shared<RotatedRectNodeData>(rr));
+    geom->typeValue = VisionGeometryNodeData::Type::RotatedRect;
+    geom->valid = false;   // 先设为 false
+    cv::RotatedRect rr = cv::minAreaRect(contour);
+    geom->center = rr.center;
+    geom->size = rr.size;
+    geom->angle = rr.angle;
+    geom->valid = true;    // 计算成功，设为 true
+
+    setOutputData(0, geom);
 }

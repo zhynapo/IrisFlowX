@@ -20,8 +20,8 @@ const NodeDesc DrawRotatedRect::desc =
     // parameters
     {
         ParamDesc::makeColor("color", "Color", QColor(255,0,0)),
-        ParamDesc::makeInt("thickness", "Thickness", 2).setRange(1, 20),
-        ParamDesc::makeInt("size", "Size", 2).setRange(1, 20)
+        ParamDesc::makeInt("thickness", "Thickness", 2).range(1, 20),
+        ParamDesc::makeInt("size", "Size", 2).range(1, 20)
     }
 };
 

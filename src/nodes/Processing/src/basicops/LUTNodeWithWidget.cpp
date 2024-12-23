@@ -23,8 +23,8 @@ const NodeDesc LUTNodeWithWidget::desc =
     // parameters
     {
         ParamDesc::makeCurve("curve", "Tone Curve")
-        //ParamDesc::makeDouble("alpha", "alpha", 0.5).setRange(-1,1),
-        //ParamDesc::makeDouble("beta",  "beta",  0.5).setRange(-1,1)
+        //ParamDesc::makeDouble("alpha", "alpha", 0.5).range(-1,1),
+        //ParamDesc::makeDouble("beta",  "beta",  0.5).range(-1,1)
     }
 };
 

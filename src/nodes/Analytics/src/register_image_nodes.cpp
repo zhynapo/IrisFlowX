@@ -10,8 +10,14 @@
 #include "Contours/MinEnclosingCircle.hpp"
 #include "Contours/MinAreaRect.hpp"
 #include "Contours/PolygonApprox.hpp"
-#include "features/MomentsNode.hpp"
 
+#include "Features/MomentsNode.hpp"
+#include "Features/HarrisCorner.hpp"
+#include "Features/FastCorner.hpp"
+#include "Features/GfttCorner.hpp"
+#include "Features/OrbFeature.hpp"
+#include "Features/SiftFeature.hpp"
+#include "Features/SurfFeature.hpp"
 
 extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* ctx)
 {
@@ -32,6 +38,12 @@ extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* c
 
     //features
     REGISTER_NODE_IN_PLUGIN(MomentsNode);
+    REGISTER_NODE_IN_PLUGIN(HarrisCorner);
+    REGISTER_NODE_IN_PLUGIN(FastCorner);
+    REGISTER_NODE_IN_PLUGIN(GfttCorner);
+    REGISTER_NODE_IN_PLUGIN(OrbFeature);
+    REGISTER_NODE_IN_PLUGIN(SiftFeature);
+    REGISTER_NODE_IN_PLUGIN(SurfFeature);
 
     return true;
 }

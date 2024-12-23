@@ -17,7 +17,7 @@ const NodeDesc DrawContourNode::desc = {
     { PortDesc::Out("mat", NodeType::Mat) },
     {
         ParamDesc::makeColor("color", "Color", QColor(255,0,0)),
-        ParamDesc::makeInt("thickness", "Thickness", 2).setRange(1, 20)
+        ParamDesc::makeInt("thickness", "Thickness", 2).range(1, 20)
     }
 };
 

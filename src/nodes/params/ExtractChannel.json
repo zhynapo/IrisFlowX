@@ -1,0 +1,27 @@
+{
+  "name": "ExtractChannel",
+  "caption": "Extract Channel",
+  "category": "Processing/BasicOps",
+  "inputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "channel",
+      "caption": "Channel",
+      "type": "int",
+      "default": 0,
+      "enum_options": ["Channel 0", "Channel 1", "Channel 2", "Channel 3"],
+      "enum_values": [0, 1, 2, 3]
+    }
+  ]
+}

@@ -12,12 +12,12 @@ const NodeDesc ErodeNode::desc =
     {
         // kernel size (must be odd)
         ParamDesc::makeInt("kernelSize", "Kernel Size", 3)
-            .setRange(1, 99)
+            .range(1, 99)
             .setStep(2),     // step = 2 → always odd
 
         // iterations
         ParamDesc::makeInt("iterations", "Iterations", 1)
-            .setRange(1, 20)
+            .range(1, 20)
             .setStep(1),
 
         // border type

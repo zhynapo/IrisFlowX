@@ -1,0 +1,63 @@
+{
+  "name": "SiftFeature",
+  "caption": "SIFT Feature Detector",
+  "category": "Analytics/Features",
+  "inputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    },
+    {
+      "name": "features",
+      "type": "VisionGeometry"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "nFeatures",
+      "caption": "Number of Features",
+      "type": "int",
+      "default": 0,
+      "min": 0,
+      "max": 10000
+    },
+    {
+      "name": "nOctaveLayers",
+      "caption": "Octave Layers",
+      "type": "int",
+      "default": 3,
+      "min": 1,
+      "max": 10
+    },
+    {
+      "name": "contrastThreshold",
+      "caption": "Contrast Threshold",
+      "type": "double",
+      "default": 0.04,
+      "min": 0.01,
+      "max": 1.0
+    },
+    {
+      "name": "edgeThreshold",
+      "caption": "Edge Threshold",
+      "type": "double",
+      "default": 10.0,
+      "min": 1.0,
+      "max": 50.0
+    },
+    {
+      "name": "sigma",
+      "caption": "Sigma",
+      "type": "double",
+      "default": 1.6,
+      "min": 0.5,
+      "max": 3.0
+    }
+  ]
+}

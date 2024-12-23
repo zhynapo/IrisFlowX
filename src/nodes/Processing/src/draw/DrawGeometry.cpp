@@ -20,8 +20,8 @@ const NodeDesc DrawGeometry::desc =
     // parameters
     {
         ParamDesc::makeColor("color", "Color", QColor(0,255,0)),
-        ParamDesc::makeInt("thickness", "Thickness", 2).setRange(1, 10),
-        ParamDesc::makeInt("crossSize", "CrossSize", 10).setRange(1, 50)
+        ParamDesc::makeInt("thickness", "Thickness", 2).range(1, 10),
+        ParamDesc::makeInt("crossSize", "CrossSize", 10).range(1, 50)
     }
 };
 

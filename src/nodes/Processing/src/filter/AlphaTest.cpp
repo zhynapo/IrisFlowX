@@ -18,7 +18,7 @@ const NodeDesc AlphaTest::desc =
 
     // parameters
     {
-        ParamDesc::makeDouble("alpha", "alpha", 0.5).setRange(0.0, 1.0)
+        ParamDesc::makeDouble("alpha", "alpha", 0.5).range(0.0, 1.0)
     }
 };
 

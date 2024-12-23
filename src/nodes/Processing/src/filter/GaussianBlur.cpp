@@ -21,7 +21,7 @@ const NodeDesc GaussianBlur::desc =
     { PortDesc::In("mat", NodeType::Mat) },
     { PortDesc::Out("mat", NodeType::Mat) },
     {
-        ParamDesc::makeInt("kernelSize", "kernelSize", 3).setRange(1, 100).setStep(2),
+        ParamDesc::makeInt("kernelSize", "kernelSize", 3).range(1, 100).setStep(2),
         ParamDesc::makeDouble("sigma", "sigma", 1.0),
         ParamDesc::makeBool("normalize", "normalize", false),
     }

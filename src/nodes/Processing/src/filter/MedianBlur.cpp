@@ -18,7 +18,7 @@ const NodeDesc MedianBlur::desc =
 
     // parameters
     {
-        ParamDesc::makeInt("ksize", "ksize", 3).setRange(1, 100).setStep(2)
+        ParamDesc::makeInt("ksize", "ksize", 3).range(1, 100).setStep(2)
     }
 };
 

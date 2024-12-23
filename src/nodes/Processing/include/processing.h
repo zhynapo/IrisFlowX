@@ -4,6 +4,8 @@
 #include "model/BaseNodeModel.hpp"
 #include "base/MatNodeData.hpp"
 #include "base/VisionGeometryNodeData.hpp"
+#include "base/AffineMatrixData.hpp"
+
 #include "NodeType.hpp"
 #include "utils.hpp"
 #include "widgets/ColorPickerWidget.hpp"

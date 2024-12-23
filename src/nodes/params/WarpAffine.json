@@ -1,8 +1,11 @@
 {
   "class_name": "WarpAffine",
   "caption": "Warp Affine",
-  "category": "Geometry",
-  "inputs": [ { "name": "image", "type": "Mat" } ],
+  "category": "Processing/Geometry",
+  "inputs": [ 
+    { "name": "image", "type": "Mat" }, 
+    { "name": "transform", "type": "AffineMatrix" } 
+  ],
   "outputs": [ { "name": "image", "type": "Mat" } ],
   "params": {
     "dst_w": { "type": "int", "default": 640 },

@@ -18,7 +18,7 @@ const NodeDesc BilateralFilter::desc =
 
     // parameters
     {
-        ParamDesc::makeInt("ksize", "ksize", 3).setRange(1, 31).setStep(2),
+        ParamDesc::makeInt("ksize", "ksize", 3).range(1, 31).setStep(2),
         ParamDesc::makeDouble("sigmaColor", "sigmaColor", 75.0),
         ParamDesc::makeDouble("sigmaSpace", "sigmaSpace", 75.0)
     }

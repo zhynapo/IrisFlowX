@@ -18,8 +18,8 @@ const NodeDesc Test::desc =
 
     // parameters
     {
-        ParamDesc::makeInt("thresh", "thresh", 128).setRange(0, 255),
-        ParamDesc::makeInt("maxval", "maxval", 255).setRange(0, 255),
+        ParamDesc::makeInt("thresh", "thresh", 128).range(0, 255),
+        ParamDesc::makeInt("maxval", "maxval", 255).range(0, 255),
         ParamDesc::makeCombo("type", "type", QVector<QString>{ QString("Binary"), QString("BinaryInv"), QString("Trunc"), QString("ToZero"), QString("ToZeroInv") }, QVector<int>{ 0, 1, 2, 3, 4 }, 0)
     }
 };

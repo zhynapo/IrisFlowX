@@ -1,0 +1,14 @@
+{
+  "class_name": "AffineMatrix",
+  "caption": "Affine Matrix",
+  "category": "Processing/Geometry",
+  "inputs": [],
+  "outputs": [ { "name": "matrix", "type": "AffineMatrix" } ],
+  "params": {
+    "angle": { "type": "double", "default": 0.0, "min": -360, "max": 360 },
+    "scale_x": { "type": "double", "default": 1.0, "min": 0.01, "max": 10.0 },
+    "scale_y": { "type": "double", "default": 1.0, "min": 0.01, "max": 10.0 },
+    "shift_x": { "type": "double", "default": 0, "min": -1000, "max": 1000 },
+    "shift_y": { "type": "double", "default": 0, "min": -1000, "max": 1000 }
+  }
+}

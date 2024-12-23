@@ -1,0 +1,27 @@
+{
+  "name": "PyrDown",
+  "caption": "Pyr Down (Image Reduction)",
+  "category": "Processing/BasicOps",
+  "inputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "borderType",
+      "caption": "Border Type",
+      "type": "int",
+      "default": 0,
+      "enum_options": ["Default", "Replicate", "Reflect", "Wrap", "Constant"],
+      "enum_values": [0, 1, 2, 3, 4]
+    }
+  ]
+}

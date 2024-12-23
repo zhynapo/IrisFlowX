@@ -1,0 +1,37 @@
+{
+  "name": "FastCorner",
+  "caption": "FAST Corner Detector",
+  "category": "Analytics/Features",
+  "inputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    },
+    {
+      "name": "corners",
+      "type": "VisionGeometry"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "threshold",
+      "caption": "Threshold",
+      "type": "int",
+      "default": 10,
+      "min": 1,
+      "max": 100
+    },
+    {
+      "name": "nonMaxSuppression",
+      "caption": "Non-Max Suppression",
+      "type": "bool",
+      "default": true
+    }
+  ]
+}

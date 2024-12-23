@@ -1,0 +1,56 @@
+{
+  "name": "HarrisCorner",
+  "caption": "Harris Corner Detector",
+  "category": "Analytics/Features",
+  "inputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "image",
+      "type": "Mat"
+    },
+    {
+      "name": "corners",
+      "type": "VisionGeometry"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "blockSize",
+      "caption": "Block Size",
+      "type": "int",
+      "default": 2,
+      "min": 2,
+      "max": 30
+    },
+    {
+      "name": "kSize",
+      "caption": "Kernel Size",
+      "type": "int",
+      "default": 3,
+      "min": 3,
+      "max": 31,
+      "step": 2
+    },
+    {
+      "name": "k",
+      "caption": "Harris Parameter k",
+      "type": "double",
+      "default": 0.04,
+      "min": 0.01,
+      "max": 0.2
+    },
+    {
+      "name": "threshold",
+      "caption": "Threshold",
+      "type": "double",
+      "default": 0.01,
+      "min": 0.001,
+      "max": 1.0
+    }
+  ]
+}

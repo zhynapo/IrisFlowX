@@ -23,7 +23,7 @@ const NodeDesc ContoursSelectNode::desc =
         ParamDesc::makeInt(
             "index",
             "Index",
-            0).setRange(0, 9999)
+            0).range(0, 9999)
     }
 };
 

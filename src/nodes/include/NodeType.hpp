@@ -22,5 +22,7 @@ namespace NodeType
     static inline const NodeDataType RotatedRect = { "rotatedrect", "RotatedRect" };
 
     static inline const NodeDataType VisionGeometry = { "visionGeometry", "VisionGeometry" };
+    static inline const NodeDataType AffineMatrix = { "affinematrix", "Affine Matrix 2x3" };
+
 }
 

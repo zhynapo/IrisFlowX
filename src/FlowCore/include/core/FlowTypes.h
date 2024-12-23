@@ -124,7 +124,7 @@ namespace Flow {
         // Fluent setters
         // -------------------------------
 
-        ParamDesc& setRange(double minV, double maxV)
+        ParamDesc& range(double minV, double maxV)
         {
             minValue = minV;
             maxValue = maxV;
