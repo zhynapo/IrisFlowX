@@ -1,29 +1,33 @@
 #pragma once
+#include <QtNodes/NodeDelegateModel>
 #include <QtNodes/NodeData>
 #include <QWidget>
+#include <QJsonObject>
+#include <QVariant>
+#include <QJsonValue>
+#include <QJsonArray>
 #include <QSpinBox>
-#include <QComboBox>
-#include <QFormLayout>
+#include <QDoubleSpinBox>
+#include <QLineEdit>
+#include <QLabel>
 
 #include "Analytics.h"
-#include <opencv2/opencv.hpp>
 
 using QtNodes::NodeData;
-using QtNodes::NodeDataType;
 using QtNodes::PortType;
+using QtNodes::NodeDataType;
 using QtNodes::PortIndex;
 
 class ContoursSelectNode : public BaseNodeModel
 {
     Q_OBJECT
+
 public:
-    ContoursSelectNode();
+    explicit ContoursSelectNode();
+    virtual ~ContoursSelectNode() = default;
+
     static const NodeDesc desc;
 
-protected:
-    void process() override;
-
 private:
-    std::vector<std::vector<cv::Point>> _contours;
-    std::vector<cv::Point> _selectedContour;
+    void process() override;
 };

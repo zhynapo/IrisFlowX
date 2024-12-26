@@ -10,15 +10,19 @@
 
 namespace Flow {
 
-    enum class ParamUIType {
+    enum class ParamUIType
+    {
         Int,
         Double,
+        String,
         Bool,
         Combo,
-        String,
         Color,
+        Curve,
+        Slider,
         Json,
-        Curve
+        Label  // 添加 Label 类型
+        
     };
 
     struct FLOWCORE_API ParamDesc
@@ -88,9 +92,18 @@ namespace Flow {
             return p;
         }
 
-        static ParamDesc makeJson(QString name, QString label, QJsonObject def = QJsonObject())
+        static ParamDesc makeLabel(QString name, QString label, QString def)
         {
-            ParamDesc p{ name, label, ParamUIType::Json, def.toVariantMap() };
+            return { name, label, ParamUIType::Label, def };
+        }
+
+        static ParamDesc makeSlider(QString name, QString label, double def)
+        {
+            ParamDesc p{ name, label, ParamUIType::Slider, def };
+            p.minValue = -999999;
+            p.maxValue = 999999;
+            p.step = 0.1;
+            p.decimals = 6;
             return p;
         }
 

@@ -1,4 +1,5 @@
 #include "PolygonApprox.hpp"
+#include "base/ContoursNodeData.hpp"
 
 
 const NodeDesc PolygonApprox::desc =
@@ -9,12 +10,12 @@ const NodeDesc PolygonApprox::desc =
 
     // inputs
     {
-        PortDesc::In("points", NodeType::Points)
+        PortDesc::In("contours", NodeType::Contours)
     },
 
     // outputs
     {
-        PortDesc::Out("out", NodeType::Points)
+        PortDesc::Out("polygons", NodeType::Contours)
     },
 
     // parameters
@@ -31,20 +32,26 @@ PolygonApprox::PolygonApprox()
 
 void PolygonApprox::process()
 {
-    auto matData = std::dynamic_pointer_cast<PointsNodeData>(_getInput(0));
-    if (!matData)
+    auto contourData = std::dynamic_pointer_cast<ContoursNodeData>(_getInput(0));
+    if (!contourData)
     {
         setOutputData(0, nullptr);
         return;
     }
 
-    std::vector<cv::Point> _input = matData->value();
-    std::vector<cv::Point> _output;
-    // TODO: implement algorithm
-    double _epsilon = parameterValue("epsilon").value<double>();
-    bool   _closed = parameterValue("closed").value<bool>();
-    cv::approxPolyDP(_input, _output,
-        _epsilon, _closed);
+    std::vector<std::vector<cv::Point>> inputContours = contourData->value();
+    std::vector<std::vector<cv::Point>> outputContours;
+    
+    // Process each contour in the input
+    for (const auto& inputContour : inputContours) {
+        std::vector<cv::Point> approximatedContour;
+        
+        double _epsilon = parameterValue("epsilon").value<double>();
+        bool   _closed = parameterValue("closed").value<bool>();
+        
+        cv::approxPolyDP(inputContour, approximatedContour, _epsilon, _closed);
+        outputContours.push_back(approximatedContour);
+    }
 
-    setOutputData(0, std::make_shared<PointsNodeData>(_output));
+    setOutputData(0, std::make_shared<ContoursNodeData>(outputContours));
 }

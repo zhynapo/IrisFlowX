@@ -10,6 +10,10 @@
 #include "Contours/MinEnclosingCircle.hpp"
 #include "Contours/MinAreaRect.hpp"
 #include "Contours/PolygonApprox.hpp"
+#include "Contours/CombinedContoursNode.hpp"
+#include "Contours/AreaPerimeterFilter.hpp"
+#include "Contours/ShapeMetricsFilter.hpp"
+#include "Contours/EccentricityFilter.hpp"
 
 #include "Features/MomentsNode.hpp"
 #include "Features/HarrisCorner.hpp"
@@ -18,6 +22,8 @@
 #include "Features/OrbFeature.hpp"
 #include "Features/SiftFeature.hpp"
 #include "Features/SurfFeature.hpp"
+
+#include "segment/ColorAnomalyDetectionNode.hpp"
 
 extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* ctx)
 {
@@ -35,6 +41,11 @@ extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* c
     REGISTER_NODE_IN_PLUGIN(MinEnclosingCircle);
     REGISTER_NODE_IN_PLUGIN(MinAreaRect);
     REGISTER_NODE_IN_PLUGIN(PolygonApprox);
+    REGISTER_NODE_IN_PLUGIN(CombinedContoursNode);
+
+    REGISTER_NODE_IN_PLUGIN(AreaPerimeterFilter);
+    REGISTER_NODE_IN_PLUGIN(ShapeMetricsFilter);
+    REGISTER_NODE_IN_PLUGIN(EccentricityFilter);
 
     //features
     REGISTER_NODE_IN_PLUGIN(MomentsNode);
@@ -44,6 +55,10 @@ extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* c
     REGISTER_NODE_IN_PLUGIN(OrbFeature);
     REGISTER_NODE_IN_PLUGIN(SiftFeature);
     REGISTER_NODE_IN_PLUGIN(SurfFeature);
+
+    //segmentation
+    REGISTER_NODE_IN_PLUGIN(ColorAnomalyDetectionNode);
+
 
     return true;
 }

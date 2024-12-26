@@ -18,20 +18,16 @@ using QtNodes::PortType;
 using QtNodes::NodeDataType;
 using QtNodes::PortIndex;
 
-class FindContoursNode : public BaseNodeModel
+class AreaPerimeterFilter : public BaseNodeModel
 {
     Q_OBJECT
 
 public:
-    explicit FindContoursNode();
-    virtual ~FindContoursNode() = default;
+    explicit AreaPerimeterFilter();
+    virtual ~AreaPerimeterFilter() = default;
 
     static const NodeDesc desc;
 
 private:
-    void process();
-
-private:
-    int _mode = 3; // RETR_EXTERNAL as default
-    int _method = 2; // CHAIN_APPROX_SIMPLE as default
+    void process() override;
 };

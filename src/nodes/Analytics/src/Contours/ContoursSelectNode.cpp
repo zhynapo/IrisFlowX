@@ -1,80 +1,144 @@
-
 #include "ContoursSelectNode.hpp"
+#include <QLabel>
+#include <QSlider>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QSpinBox>
+#include <QDoubleSpinBox>
+#include <QCheckBox>
+#include <QLineEdit>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui.hpp>
+#include <QDebug>
 
-const NodeDesc ContoursSelectNode::desc =
-{
-    "ContoursSelect",
-    "Contours Select",
-    CAT_ANALY_CONTOURS,                  // category
-    // ports
-    { PortDesc::In("Contours", NodeType::Contours) },
-    { PortDesc::Out("Points", NodeType::Points) },
-
-    // ----------- params -------------
+const NodeDesc ContoursSelectNode::desc = {
+    "Select Contour",
+    "ContoursSelectNode",
+    CAT_ANALY_CONTOURS,
     {
-        ParamDesc::makeCombo(
-            "mode",
-            "Mode",
-            { "By Index", "Largest Area" },     // comboNames
-            { 0, 1 },                           // comboValues（你可以自定义）
-            0                                   // default value index (0 = By Index)
-        ),
-
-        ParamDesc::makeInt(
-            "index",
-            "Index",
-            0).range(0, 9999)
+        PortDesc::In("contours", NodeType::Contours)
+    },
+    {
+        PortDesc::Out("selected_contour", NodeType::Contours)
+    },
+    {
+        // Index parameter for selecting from input contours
+        ParamDesc::makeInt("index", "Contour Index", 0).range(0, 100),
+        
+        // Parameters to display contour metrics using labels
+        ParamDesc::makeLabel("area_label", "Area", "0.0"),
+        ParamDesc::makeLabel("perimeter_label", "Perimeter", "0.0"),
+        ParamDesc::makeLabel("circularity_label", "Circularity", "0.0"),
+        ParamDesc::makeLabel("solidity_label", "Solidity", "0.0"),
+        ParamDesc::makeLabel("extent_label", "Extent", "0.0"),
+        ParamDesc::makeLabel("eccentricity_label", "Eccentricity", "0.0")
     }
 };
 
-
-
 ContoursSelectNode::ContoursSelectNode()
-    :BaseNodeModel(desc)
+    : BaseNodeModel(desc)
 {
-
 }
 
 void ContoursSelectNode::process()
 {
-    //----- 1. 获取Contours输入 -----
-    auto contourtData = std::dynamic_pointer_cast<ContoursNodeData>(_getInput(0));
-    if (!contourtData)
-    {
+    // Get contour input
+    auto contourData = std::dynamic_pointer_cast<ContoursNodeData>(_getInput(0));
+    
+    if (!contourData) {
         setOutputData(0, nullptr);
+        // Set all metrics to 0
+        setParameter("area_label", "Area: 0.0");
+        setParameter("perimeter_label", "Perimeter: 0.0");
+        setParameter("circularity_label", "Circularity: 0.000");
+        setParameter("solidity_label", "Solidity: 0.000");
+        setParameter("extent_label", "Extent: 0.000");
+        setParameter("eccentricity_label", "Eccentricity: 0.000");
         return;
     }
-
-
-    std::vector<std::vector<cv::Point>> _contours = contourtData->value();
-    if (_contours.empty()) return;
-    int n = _contours.size();
-    setParamRange("index", 0, _contours.size() - 1);
+    
+    std::vector<std::vector<cv::Point>> inputContours = contourData->value();
+    
+    if (inputContours.empty()) {
+        setOutputData(0, nullptr);
+        // Set all metrics to 0
+        setParameter("area_label", "Area: 0.0");
+        setParameter("perimeter_label", "Perimeter: 0.0");
+        setParameter("circularity_label", "Circularity: 0.000");
+        setParameter("solidity_label", "Solidity: 0.000");
+        setParameter("extent_label", "Extent: 0.000");
+        setParameter("eccentricity_label", "Eccentricity: 0.000");
+        return;
+    }
+    
+    // Get parameters
+    int index = parameterValue("index").toInt();
+    
+    // Update parameter ranges based on input contour count
+    int n = inputContours.size();
+    setParamRange("index", 0, n - 1);
     setParamEnabled("index", n > 0);
-
-    //----- 4. 获取参数，例如颜色 -----
-    int k = parameterValue("mode").value<int>();
-
-    if (k == 0) {
-        int idx = parameterValue("index").value<int>();
-        if (idx >= 0 && idx < (int)_contours.size()) {
-            _selectedContour = _contours[idx];
+    
+    // Select the contour at the specified index
+    std::vector<std::vector<cv::Point>> outputContours;
+    
+    if (index >= 0 && index < n) {
+        outputContours.push_back(inputContours[index]);
+    } else {
+        // If index is out of range, default to the first contour
+        outputContours.push_back(inputContours[0]);
+    }
+    
+    // Calculate metrics for the selected contour
+    auto selectedContour = outputContours[0];
+    
+    double area = cv::contourArea(selectedContour);
+    double perimeter = cv::arcLength(selectedContour, true);
+    
+    double circularity = 0.0;
+    if (perimeter > 0) {
+        circularity = 4 * CV_PI * area / (perimeter * perimeter);
+    }
+    
+    double solidity = 0.0;
+    std::vector<cv::Point> hull;
+    cv::convexHull(selectedContour, hull);
+    double hullArea = cv::contourArea(hull);
+    if (hullArea > 0) {
+        solidity = area / hullArea;
+    }
+    
+    cv::Rect boundingRect = cv::boundingRect(selectedContour);
+    double boundingArea = boundingRect.width * boundingRect.height;
+    double extent = 0.0;
+    if (boundingArea > 0) {
+        extent = area / boundingArea;
+    }
+    
+    double eccentricity = 0.0;
+    if (selectedContour.size() >= 5) {
+        cv::RotatedRect ellipse = cv::fitEllipse(selectedContour);
+        double semiMajorAxis = std::max(ellipse.size.width, ellipse.size.height) / 2.0;
+        double semiMinorAxis = std::min(ellipse.size.width, ellipse.size.height) / 2.0;
+        
+        if (semiMajorAxis > semiMinorAxis) {
+            eccentricity = sqrt(1 - (semiMinorAxis * semiMinorAxis) / (semiMajorAxis * semiMajorAxis));
         }
     }
-    else if (k == 1) {
-        double maxArea = 0;
-        int bestIdx = -1;
-        for (int i = 0; i < (int)_contours.size(); i++) {
-            double a = cv::contourArea(_contours[i]);
-            if (a > maxArea) {
-                maxArea = a;
-                bestIdx = i;
-            }
-        }
-        if (bestIdx >= 0)
-            _selectedContour = _contours[bestIdx];
-    }
-    //----- 6. 设置输出 -----
-    setOutputData(0, std::make_shared<PointsNodeData>(_selectedContour));
+    
+    // Update the parameters with the calculated metrics
+    setParameter("area_label", QString("Area: %1").arg(area, 0, 'f', 2));
+    setParameter("perimeter_label", QString("Perimeter: %1").arg(perimeter, 0, 'f', 2));
+    setParameter("circularity_label", QString("Circularity: %1").arg(circularity, 0, 'f', 3));
+    setParameter("solidity_label", QString("Solidity: %1").arg(solidity, 0, 'f', 3));
+    setParameter("extent_label", QString("Extent: %1").arg(extent, 0, 'f', 3));
+    setParameter("eccentricity_label", QString("Eccentricity: %1").arg(eccentricity, 0, 'f', 3));
+    
+    // Create contour data
+    auto outputData = std::make_shared<ContoursNodeData>(outputContours);
+    
+    // Output the results
+    setOutputData(0, outputData);
 }
-

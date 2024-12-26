@@ -19,6 +19,10 @@ const NodeDesc DrawGeometry::desc =
 
     // parameters
     {
+        ParamDesc::makeCombo("drawMode", "Draw Mode", 
+            QVector<QString>{"Full Shape", "Corner Points", "Center Cross"},
+            QVector<int>{0, 1, 2},
+            0),
         ParamDesc::makeColor("color", "Color", QColor(0,255,0)),
         ParamDesc::makeInt("thickness", "Thickness", 2).range(1, 10),
         ParamDesc::makeInt("crossSize", "CrossSize", 10).range(1, 50)
@@ -43,6 +47,7 @@ void DrawGeometry::process()
 
     cv::Mat output = matData->mat().clone();
 
+    int drawMode = parameterValue("drawMode").toInt();
     QColor color = parameterValue("color").value<QColor>();
     int thickness = parameterValue("thickness").toInt();
     int crossSize = parameterValue("crossSize").toInt();
@@ -59,7 +64,11 @@ void DrawGeometry::process()
 
     case VisionGeometryNodeData::Type::Circle:
     {
-        cv::circle(output, geoData->center, geoData->radius, cvColor, thickness);
+        if (drawMode == 0) { // Full Shape
+            cv::circle(output, geoData->center, geoData->radius, cvColor, thickness);
+        } else if (drawMode == 1) { // Corner Points - Not applicable for Circle
+            cv::circle(output, geoData->center, geoData->radius, cvColor, thickness);
+        }
         break;
     }
 
@@ -69,16 +78,32 @@ void DrawGeometry::process()
         cv::Point2f pts[4];
         rr.points(pts);
 
-        for (int i = 0; i < 4; ++i)
-            cv::line(output, pts[i], pts[(i + 1) % 4], cvColor, thickness);
+        if (drawMode == 0) { // Full Shape - Draw the full rectangle
+            for (int i = 0; i < 4; ++i)
+                cv::line(output, pts[i], pts[(i + 1) % 4], cvColor, thickness);
+        } else if (drawMode == 1) { // Corner Points - Draw only the 4 corner points
+            for (int i = 0; i < 4; ++i) {
+                cv::circle(output, pts[i], thickness + 2, cvColor, 3); // Filled circles at corners
+
+                cv::Point2f c = pts[i];
+                cv::line(output, { int(c.x - crossSize), int(c.y) }, { int(c.x + crossSize), int(c.y) }, cvColor, thickness);
+                cv::line(output, { int(c.x), int(c.y - crossSize) }, { int(c.x), int(c.y + crossSize) }, cvColor, thickness);
+            }
+        }
         break;
     }
 
     case VisionGeometryNodeData::Type::Contour:
     {
-        std::vector<std::vector<cv::Point>> cs;
-        cs.push_back(geoData->contour);
-        cv::drawContours(output, cs, -1, cvColor, thickness);
+        if (drawMode == 0) { // Full Shape
+            std::vector<std::vector<cv::Point>> cs;
+            cs.push_back(geoData->contour);
+            cv::drawContours(output, cs, -1, cvColor, thickness);
+        } else if (drawMode == 1) { // Corner Points - Treat each point in contour as a corner
+            for (const auto& point : geoData->contour) {
+                cv::circle(output, point, thickness + 2, cvColor, -1); // Filled circles at points
+            }
+        }
         break;
     }
 
@@ -86,10 +111,12 @@ void DrawGeometry::process()
         break;
     }
 
-    // 画十字中心
-    cv::Point2f c = geoData->center;
-    cv::line(output, { int(c.x - crossSize), int(c.y) }, { int(c.x + crossSize), int(c.y) }, cvColor, thickness);
-    cv::line(output, { int(c.x), int(c.y - crossSize) }, { int(c.x), int(c.y + crossSize) }, cvColor, thickness);
+    // 画十字中心 - only if not in corner points mode
+    if (drawMode != 1) {
+        cv::Point2f c = geoData->center;
+        cv::line(output, { int(c.x - crossSize), int(c.y) }, { int(c.x + crossSize), int(c.y) }, cvColor, thickness);
+        cv::line(output, { int(c.x), int(c.y - crossSize) }, { int(c.x), int(c.y + crossSize) }, cvColor, thickness);
+    }
 
     setOutputData(0, std::make_shared<MatNodeData>(output));
 }

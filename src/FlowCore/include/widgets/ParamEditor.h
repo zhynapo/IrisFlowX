@@ -372,4 +372,37 @@ namespace Flow
     private:
         CurveEditorWidget* _editor = nullptr;
     };
+
+    // ========================================================================
+    // Label 参数编辑器（最终版）
+    // ========================================================================
+    class LabelParamEditor : public QWidget, public IParamEditor
+    {
+    public:
+        explicit LabelParamEditor(QString text, QWidget* parent = nullptr)
+        {
+            label = new QLabel(text, parent);
+            label->setStyleSheet("QLabel { background-color: #f0f0f0; border: 1px solid #ccc; padding: 3px; }");
+        }
+
+        QWidget* widget() override
+        {
+            return label;
+        }
+
+        void applyRuntime(const ParamRuntime& rt) override
+        {
+            // Labels are typically always enabled
+            label->setEnabled(true);
+        }
+
+        void setValue(const QVariant& v) override
+        {
+            label->setText(v.toString());
+        }
+
+    private:
+        QLabel* label = nullptr;
+    };
+
 }

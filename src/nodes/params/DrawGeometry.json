@@ -1,0 +1,53 @@
+{
+  "name": "DrawGeometry",
+  "caption": "DrawGeometry",
+  "category": "Processing/Draw",
+  "inputs": [
+    {
+      "name": "mat",
+      "type": "Mat"
+    },
+    {
+      "name": "geometry",
+      "type": "VisionGeometry"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "mat",
+      "type": "Mat"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "drawMode",
+      "caption": "Draw Mode",
+      "type": "int",
+      "default": 0,
+      "enum_options": ["Full Shape", "Corner Points", "Center Cross"],
+      "enum_values": [0, 1, 2]
+    },
+    {
+      "name": "color",
+      "caption": "Color",
+      "type": "color",
+      "default": "#00FF00"
+    },
+    {
+      "name": "thickness",
+      "caption": "Thickness",
+      "type": "int",
+      "default": 2,
+      "min": 1,
+      "max": 10
+    },
+    {
+      "name": "crossSize",
+      "caption": "CrossSize",
+      "type": "int",
+      "default": 10,
+      "min": 1,
+      "max": 50
+    }
+  ]
+}

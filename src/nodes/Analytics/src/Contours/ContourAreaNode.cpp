@@ -1,7 +1,6 @@
-
-
 #include <QVBoxLayout>
 #include "ContourAreaNode.hpp"
+#include "base/ContoursNodeData.hpp"
 
 const NodeDesc ContourAreaNode::desc =
 {
@@ -9,7 +8,7 @@ const NodeDesc ContourAreaNode::desc =
     "Contour Area",           // displayName
     CAT_ANALY_CONTOURS,                  // category
     // inputs
-    { PortDesc::In("Points", NodeType::Points) },
+    { PortDesc::In("contours", NodeType::Contours) },
 
     // outputs
     { PortDesc::Out("Area", NodeType::Integer) },
@@ -42,8 +41,8 @@ QWidget* ContourAreaNode::embeddedWidget()
 
 void ContourAreaNode::process()
 {
-    auto ptsData = std::dynamic_pointer_cast<PointsNodeData>(_getInput(0));
-    if (!ptsData)
+    auto contourData = std::dynamic_pointer_cast<ContoursNodeData>(_getInput(0));
+    if (!contourData)
     {
         _area = 0;
         setOutputData(0, nullptr);
@@ -51,8 +50,8 @@ void ContourAreaNode::process()
         return;
     }
 
-    const auto& pts = ptsData->value();
-    if (pts.empty())
+    const auto& contours = contourData->value();
+    if (contours.empty())
     {
         _area = 0;
         setOutputData(0, nullptr);
@@ -60,6 +59,8 @@ void ContourAreaNode::process()
         return;
     }
 
+    // Calculate area of the first contour in the list
+    const auto& pts = contours[0];
     _area = cv::contourArea(pts);
 
     // 更新 label

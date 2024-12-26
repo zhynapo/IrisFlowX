@@ -51,6 +51,10 @@ namespace Flow
                 );
                 return new CurveParamEditor(def);
             }
+
+            case ParamUIType::Label:
+                return new LabelParamEditor(p.defaultValue.toString());
+
             }
 
             return nullptr;

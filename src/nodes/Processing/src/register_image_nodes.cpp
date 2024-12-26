@@ -30,6 +30,7 @@
 #include "filter/MedianBlur.hpp"
 #include "filter/BilateralFilter.hpp"
 #include "filter/Test.hpp"
+#include "filter/SobelGradientNode.hpp"
 
 #include "morph/MorphologyNode.hpp"
 #include "morph/ErodeNode.hpp"
@@ -39,6 +40,7 @@
 #include "draw/DrawRotatedRect.hpp"
 #include "draw/DrawContourNode.hpp"
 #include "draw/DrawGeometry.hpp"
+#include "draw/DrawContours.hpp"  // 添加 DrawContours 头文件引用
 
 extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* ctx)
 {
@@ -79,6 +81,7 @@ extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* c
     REGISTER_NODE_IN_PLUGIN(GaussianBlur);
     REGISTER_NODE_IN_PLUGIN(MedianBlur);
     REGISTER_NODE_IN_PLUGIN(BilateralFilter);
+    REGISTER_NODE_IN_PLUGIN(SobelGradientNode);
 
     //morph
     REGISTER_NODE_IN_PLUGIN(MorphologyNode);
@@ -90,6 +93,7 @@ extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* c
     REGISTER_NODE_IN_PLUGIN(DrawRotatedRect);
     REGISTER_NODE_IN_PLUGIN(DrawContourNode);
     REGISTER_NODE_IN_PLUGIN(DrawGeometry);
+    REGISTER_NODE_IN_PLUGIN(DrawContours);  // 添加 DrawContours 节点注册
 
     return true;
 }
