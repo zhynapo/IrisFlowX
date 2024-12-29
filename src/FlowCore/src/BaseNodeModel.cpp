@@ -127,10 +127,6 @@ namespace Flow {
         {
             QString paramName = p.name;
 
-            // Label
-            QLabel* label = new QLabel(p.label);
-            layout->addWidget(label);
-
             // -------- 创建编辑器控件（统一工厂） --------
             //IParamEditor* ed = ParamEditorFactory::create(p);
             IParamEditor* ed = nullptr;
@@ -143,6 +139,8 @@ namespace Flow {
             // -------- 添加控件到 UI --------
             QWidget* w = ed->widget();
             layout->addWidget(w);
+
+            // -------- 记录默认参数值 --------
 
             // -------- 记录默认参数值 --------
             _paramValues[paramName] = p.defaultValue;
@@ -284,7 +282,9 @@ namespace Flow {
     {
         _paramValues[name] = v;
         applyParameter(name, v);
-        update();
+        if (!_isProcessing)
+            update();
+        return; // 正在处理时不触发 update
     }
 
     void BaseNodeModel::applyParameter(const QString& name, const QVariant& v)

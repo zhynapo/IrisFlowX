@@ -86,7 +86,9 @@ namespace Flow {
             _paramUpdateTimer->start();
         };
         void proc_() {
+            _isProcessing = true;  // 标记开始处理
             process();
+            _isProcessing = false; // 标记处理结束
             emitOutputs();
         }
 
@@ -118,7 +120,7 @@ namespace Flow {
     private:
         BaseGraphModel* _graphModel = nullptr;
         QTimer* _paramUpdateTimer = nullptr;
-
+        qint64 _lastUpdateTime = 0;  // 记录最后更新时间
+        bool _isProcessing = false;   // 添加标志追踪是否在处理中
     };
 }
-
