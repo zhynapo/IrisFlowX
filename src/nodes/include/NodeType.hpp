@@ -5,6 +5,7 @@
 #include "base/PointsNodeData.hpp"
 #include "base/NumberNodeData.hpp"
 #include "base/RotatedRectNodeData.hpp"
+#include "base/ContoursNodeData.hpp"  // 添加 ContoursNodeData 的包含
 
 using QtNodes::NodeDataType;
 
@@ -25,4 +26,3 @@ namespace NodeType
     static inline const NodeDataType AffineMatrix = { "affinematrix", "Affine Matrix 2x3" };
 
 }
-
