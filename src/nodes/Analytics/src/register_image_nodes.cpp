@@ -12,6 +12,9 @@
 #include "Contours/PolygonApprox.hpp"
 #include "Contours/CombinedContoursNode.hpp"
 #include "Contours/AreaPerimeterFilter.hpp"
+#include "Contours/CircularityFilter.hpp"
+#include "Contours/SolidityFilter.hpp"
+#include "Contours/ExtentFilter.hpp"
 #include "Contours/ShapeMetricsFilter.hpp"
 #include "Contours/EccentricityFilter.hpp"
 
@@ -44,6 +47,9 @@ extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* c
     REGISTER_NODE_IN_PLUGIN(CombinedContoursNode);
 
     REGISTER_NODE_IN_PLUGIN(AreaPerimeterFilter);
+    REGISTER_NODE_IN_PLUGIN(CircularityFilter);
+    REGISTER_NODE_IN_PLUGIN(SolidityFilter);
+    REGISTER_NODE_IN_PLUGIN(ExtentFilter);
     REGISTER_NODE_IN_PLUGIN(ShapeMetricsFilter);
     REGISTER_NODE_IN_PLUGIN(EccentricityFilter);
 
@@ -58,7 +64,6 @@ extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* c
 
     //segmentation
     REGISTER_NODE_IN_PLUGIN(ColorAnomalyDetectionNode);
-
 
     return true;
 }
