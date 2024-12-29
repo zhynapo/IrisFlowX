@@ -40,6 +40,12 @@ const NodeDesc ContoursSelectNode::desc = {
 ContoursSelectNode::ContoursSelectNode()
     : BaseNodeModel(desc)
 {
+    setParameter("area_label", "0.0");
+    setParameter("perimeter_label", "0.0");
+    setParameter("circularity_label", "0.000");
+    setParameter("solidity_label", "0.000");
+    setParameter("extent_label", "0.000");
+    setParameter("eccentricity_label", "0.000");
 }
 
 void ContoursSelectNode::process()
@@ -49,13 +55,13 @@ void ContoursSelectNode::process()
     
     if (!contourData) {
         setOutputData(0, nullptr);
-        // Set all metrics to 0
-        setParameter("area_label", "Area: 0.0");
-        setParameter("perimeter_label", "Perimeter: 0.0");
-        setParameter("circularity_label", "Circularity: 0.000");
-        setParameter("solidity_label", "Solidity: 0.000");
-        setParameter("extent_label", "Extent: 0.000");
-        setParameter("eccentricity_label", "Eccentricity: 0.000");
+        // 现在可以直接使用setParameter，系统会自动处理更新逻辑
+        setParameter("area_label", "0.0");
+        setParameter("perimeter_label", "0.0");
+        setParameter("circularity_label", "0.000");
+        setParameter("solidity_label", "0.000");
+        setParameter("extent_label", "0.000");
+        setParameter("eccentricity_label", "0.000");
         return;
     }
     
@@ -63,13 +69,13 @@ void ContoursSelectNode::process()
     
     if (inputContours.empty()) {
         setOutputData(0, nullptr);
-        // Set all metrics to 0
-        setParameter("area_label", "Area: 0.0");
-        setParameter("perimeter_label", "Perimeter: 0.0");
-        setParameter("circularity_label", "Circularity: 0.000");
-        setParameter("solidity_label", "Solidity: 0.000");
-        setParameter("extent_label", "Extent: 0.000");
-        setParameter("eccentricity_label", "Eccentricity: 0.000");
+        // 现在可以直接使用setParameter，系统会自动处理更新逻辑
+        setParameter("area_label", "0.0");
+        setParameter("perimeter_label", "0.0");
+        setParameter("circularity_label", "0.000");
+        setParameter("solidity_label", "0.000");
+        setParameter("extent_label", "0.000");
+        setParameter("eccentricity_label", "0.000");
         return;
     }
     
@@ -128,13 +134,14 @@ void ContoursSelectNode::process()
         }
     }
     
-    // Update the parameters with the calculated metrics
-    setParameter("area_label", QString("Area: %1").arg(area, 0, 'f', 2));
-    setParameter("perimeter_label", QString("Perimeter: %1").arg(perimeter, 0, 'f', 2));
-    setParameter("circularity_label", QString("Circularity: %1").arg(circularity, 0, 'f', 3));
-    setParameter("solidity_label", QString("Solidity: %1").arg(solidity, 0, 'f', 3));
-    setParameter("extent_label", QString("Extent: %1").arg(extent, 0, 'f', 3));
-    setParameter("eccentricity_label", QString("Eccentricity: %1").arg(eccentricity, 0, 'f', 3));
+    // 现在可以直接使用setParameter，系统会自动处理更新逻辑
+    
+    setParameter("area_label", QString("%1").arg(area, 0, 'f', 2));
+    setParameter("perimeter_label", QString("%1").arg(perimeter, 0, 'f', 2));
+    setParameter("circularity_label", QString("%1").arg(circularity, 0, 'f', 3));
+    setParameter("solidity_label", QString("%1").arg(solidity, 0, 'f', 3));
+    setParameter("extent_label", QString("%1").arg(extent, 0, 'f', 3));
+    setParameter("eccentricity_label", QString("%1").arg(eccentricity, 0, 'f', 3));
     
     // Create contour data
     auto outputData = std::make_shared<ContoursNodeData>(outputContours);
