@@ -24,16 +24,8 @@ const NodeDesc EccentricityFilter::desc = {
         PortDesc::Out("filtered_contours", NodeType::Contours)
     },
     {
-        // Boolean parameters to enable/disable filters
-        ParamDesc::makeBool("enable_eccentricity", "Enable Eccentricity Filter", false),
         ParamDesc::makeDouble("min_eccentricity", "Min Eccentricity", 0.0).range(0.0, 1.0),
-        ParamDesc::makeDouble("max_eccentricity", "Max Eccentricity", 1.0).range(0.0, 1.0),
-        
-        // Index parameter for selecting from filtered results
-        ParamDesc::makeInt("index", "Contour Index", 0).range(0, 100),
-        
-        // Parameters to display contour metrics using labels
-        ParamDesc::makeLabel("eccentricity_label", "Eccentricity", "0.0")
+        ParamDesc::makeDouble("max_eccentricity", "Max Eccentricity", 1.0).range(0.0, 1.0)
     }
 };
 
@@ -48,8 +40,8 @@ void EccentricityFilter::process()
     auto contourData = std::dynamic_pointer_cast<ContoursNodeData>(_getInput(0));
     
     if (!contourData) {
+        // 当没有输入数据时，确保清空所有输出并停止进一步处理
         setOutputData(0, nullptr);
-        setParameter("eccentricity_label", "Eccentricity: 0.000");
         return;
     }
     
@@ -57,89 +49,72 @@ void EccentricityFilter::process()
     
     if (inputContours.empty()) {
         setOutputData(0, nullptr);
-        setParameter("eccentricity_label", "Eccentricity: 0.000");
         return;
     }
     
-    // Get parameters
-    bool enableEccentricity = parameterValue("enable_eccentricity").toBool();
-    double minEccentricity = parameterValue("min_eccentricity").toDouble();
-    double maxEccentricity = parameterValue("max_eccentricity").toDouble();
-    
-    int index = parameterValue("index").toInt();
+    // Get parameters with clamping to fixed valid range [0, 1]
+    double minEccentricity = std::clamp(parameterValue("min_eccentricity").toDouble(), 0.0, 1.0);
+    double maxEccentricity = std::clamp(parameterValue("max_eccentricity").toDouble(), 0.0, 1.0);
+
+    // Ensure min <= max
+    if (minEccentricity > maxEccentricity) {
+        std::swap(minEccentricity, maxEccentricity);
+        // Optionally sync corrected values back to UI without triggering update
+        setParameter("min_eccentricity", minEccentricity);
+        setParameter("max_eccentricity", maxEccentricity);
+    }
     
     std::vector<std::vector<cv::Point>> filteredContours;
     
-    // Apply filters to each contour
+    // Apply eccentricity filter to each contour
     for (const auto& contour : inputContours) {
-        bool passesAllFilters = true;
+        bool passesFilter = true;
         
         // Eccentricity filter
-        if (passesAllFilters && enableEccentricity) {
+        if (passesFilter) {
             if (contour.size() < 5) {
-                passesAllFilters = false; // Need at least 5 points for fitEllipse
+                passesFilter = false; // Need at least 5 points for fitEllipse
             } else {
-                cv::RotatedRect ellipse = cv::fitEllipse(contour);
-                double semiMajorAxis = std::max(ellipse.size.width, ellipse.size.height) / 2.0;
-                double semiMinorAxis = std::min(ellipse.size.width, ellipse.size.height) / 2.0;
-                
-                double eccentricity = 0.0;
-                if (semiMajorAxis > semiMinorAxis) {
-                    eccentricity = sqrt(1 - (semiMinorAxis * semiMinorAxis) / (semiMajorAxis * semiMajorAxis));
+                cv::RotatedRect ellipse;
+                try {
+                    ellipse = cv::fitEllipse(contour);
+                } catch (const cv::Exception& e) {
+                    // Skip contours that can't be fitted to ellipse
+                    passesFilter = false;
                 }
                 
-                if (eccentricity < minEccentricity || eccentricity > maxEccentricity) {
-                    passesAllFilters = false;
+                if (passesFilter) {
+                    double semiMajorAxis = std::max(ellipse.size.width, ellipse.size.height) / 2.0;
+                    double semiMinorAxis = std::min(ellipse.size.width, ellipse.size.height) / 2.0;
+                    
+                    double eccentricity = 0.0;
+                    if (semiMajorAxis > 0) {
+                        double ratio = semiMinorAxis / semiMajorAxis;
+                        eccentricity = std::sqrt(1.0 - ratio * ratio);
+                    }
+                    
+                    if (eccentricity < minEccentricity || eccentricity > maxEccentricity) {
+                        passesFilter = false;
+                    }
                 }
             }
         }
         
-        if (passesAllFilters) {
+        if (passesFilter) {
             filteredContours.push_back(contour);
         }
     }
     
-    // Update parameter ranges based on filtered contour count
-    int n = filteredContours.size();
-    setParamRange("index", 0, n - 1);
-    setParamEnabled("index", n > 0);
-    
-    std::vector<std::vector<cv::Point>> outputContours;
-    
     if (filteredContours.empty()) {
-        // No contours passed all filters, return null
+        // No contours passed the filter, return null
         setOutputData(0, nullptr);
-        setParameter("eccentricity_label", "Eccentricity: 0.000");
         return;
     }
     
-    std::vector<cv::Point> selectedContour;
-    if (index >= 0 && index < n) {
-        selectedContour = filteredContours[index];
-        outputContours.push_back(selectedContour);
-    } else {
-        // If index is out of range, default to the first contour
-        selectedContour = filteredContours[0];
-        outputContours.push_back(selectedContour);
-    }
-    
-    // Calculate metric for the selected contour
-    double eccentricity = 0.0;
-    if (selectedContour.size() >= 5) {
-        cv::RotatedRect ellipse = cv::fitEllipse(selectedContour);
-        double semiMajorAxis = std::max(ellipse.size.width, ellipse.size.height) / 2.0;
-        double semiMinorAxis = std::min(ellipse.size.width, ellipse.size.height) / 2.0;
-        
-        if (semiMajorAxis > semiMinorAxis) {
-            eccentricity = sqrt(1 - (semiMinorAxis * semiMinorAxis) / (semiMajorAxis * semiMajorAxis));
-        }
-    }
-    
-    setParameter("eccentricity_label", QString("Eccentricity: %1").arg(eccentricity, 0, 'f', 3));
-    
-    // Create contour data
-    auto outputData = std::make_shared<ContoursNodeData>(outputContours);
+    // Create contour data with all filtered contours
+    auto outputData = std::make_shared<ContoursNodeData>(filteredContours);
     
     // Output the results
     setOutputData(0, outputData);
 }
+
