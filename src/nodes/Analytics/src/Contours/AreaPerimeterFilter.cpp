@@ -14,7 +14,7 @@
 #include <QDebug>
 
 const NodeDesc AreaPerimeterFilter::desc = {
-    "Area & Perimeter Filter",
+    "Area/Perimeter Filter",
     "AreaPerimeterFilter",
     CAT_ANALY_CONTOURS,
     {
@@ -29,16 +29,9 @@ const NodeDesc AreaPerimeterFilter::desc = {
         ParamDesc::makeInt("min_area", "Min Area", 0).range(0, 1000000),
         ParamDesc::makeInt("max_area", "Max Area", 100000).range(0, 1000000),
         
-        ParamDesc::makeBool("enable_length", "Enable Length Filter", false),
-        ParamDesc::makeInt("min_length", "Min Length", 0).range(0, 100000),
-        ParamDesc::makeInt("max_length", "Max Length", 10000).range(0, 100000),
-        
-        // Index parameter for selecting from filtered results
-        ParamDesc::makeInt("index", "Contour Index", 0).range(0, 100),
-        
-        // Parameters to display contour metrics using labels
-        ParamDesc::makeLabel("area_label", "Area", "0.0"),
-        ParamDesc::makeLabel("perimeter_label", "Perimeter", "0.0")
+        ParamDesc::makeBool("enable_perimeter", "Enable Perimeter Filter", false),
+        ParamDesc::makeDouble("min_perimeter", "Min Perimeter", 0.0).range(0.0, 100000.0),
+        ParamDesc::makeDouble("max_perimeter", "Max Perimeter", 10000.0).range(0.0, 100000.0)
     }
 };
 
@@ -54,8 +47,11 @@ void AreaPerimeterFilter::process()
     
     if (!contourData) {
         setOutputData(0, nullptr);
-        setParameter("area_label", "Area: 0.0");
-        setParameter("perimeter_label", "Perimeter: 0.0");
+        // 直接修改内部参数值，而不是调用setParameter，以避免触发更新
+        _paramValues["area_label"] = "Area: 0.000";
+        _paramValues["perimeter_label"] = "Perimeter: 0.000";
+        setParamRange("index", 0, 0);  // 设置为无效范围
+        setParamEnabled("index", false);  // 禁用索引参数
         return;
     }
     
@@ -63,21 +59,23 @@ void AreaPerimeterFilter::process()
     
     if (inputContours.empty()) {
         setOutputData(0, nullptr);
-        setParameter("area_label", "Area: 0.0");
-        setParameter("perimeter_label", "Perimeter: 0.0");
+        // 直接修改内部参数值，而不是调用setParameter，以避免触发更新
+        _paramValues["area_label"] = "Area: 0.000";
+        _paramValues["perimeter_label"] = "Perimeter: 0.000";
+        setParamRange("index", 0, 0);  // 设置为无效范围
+        setParamEnabled("index", false);  // 禁用索引参数
         return;
     }
+    
     
     // Get parameters
     bool enableArea = parameterValue("enable_area").toBool();
     int minArea = parameterValue("min_area").toInt();
     int maxArea = parameterValue("max_area").toInt();
     
-    bool enableLength = parameterValue("enable_length").toBool();
-    int minLength = parameterValue("min_length").toInt();
-    int maxLength = parameterValue("max_length").toInt();
-    
-    int index = parameterValue("index").toInt();
+    bool enablePerimeter = parameterValue("enable_perimeter").toBool();
+    double minPerimeter = parameterValue("min_perimeter").toDouble();
+    double maxPerimeter = parameterValue("max_perimeter").toDouble();
     
     std::vector<std::vector<cv::Point>> filteredContours;
     
@@ -93,10 +91,10 @@ void AreaPerimeterFilter::process()
             }
         }
         
-        // Length filter
-        if (passesAllFilters && enableLength) {
+        // Perimeter filter
+        if (passesAllFilters && enablePerimeter) {
             double perimeter = cv::arcLength(contour, true);
-            if (perimeter < minLength || perimeter > maxLength) {
+            if (perimeter < minPerimeter || perimeter > maxPerimeter) {
                 passesAllFilters = false;
             }
         }
@@ -106,41 +104,14 @@ void AreaPerimeterFilter::process()
         }
     }
     
-    // Update parameter ranges based on filtered contour count
-    int n = filteredContours.size();
-    setParamRange("index", 0, n - 1);
-    setParamEnabled("index", n > 0);
-    
-    std::vector<std::vector<cv::Point>> outputContours;
-    
     if (filteredContours.empty()) {
         // No contours passed all filters, return null
         setOutputData(0, nullptr);
-        setParameter("area_label", "Area: 0.0");
-        setParameter("perimeter_label", "Perimeter: 0.0");
         return;
     }
     
-    std::vector<cv::Point> selectedContour;
-    if (index >= 0 && index < n) {
-        selectedContour = filteredContours[index];
-        outputContours.push_back(selectedContour);
-    } else {
-        // If index is out of range, default to the first contour
-        selectedContour = filteredContours[0];
-        outputContours.push_back(selectedContour);
-    }
-    
-    // Calculate metrics for the selected contour
-    double area = cv::contourArea(selectedContour);
-    double perimeter = cv::arcLength(selectedContour, true);
-    
-    // Update the parameters with the calculated metrics
-    setParameter("area_label", QString("Area: %1").arg(area, 0, 'f', 2));
-    setParameter("perimeter_label", QString("Perimeter: %1").arg(perimeter, 0, 'f', 2));
-    
-    // Create contour data
-    auto outputData = std::make_shared<ContoursNodeData>(outputContours);
+    // Create contour data with all filtered contours
+    auto outputData = std::make_shared<ContoursNodeData>(filteredContours);
     
     // Output the results
     setOutputData(0, outputData);
