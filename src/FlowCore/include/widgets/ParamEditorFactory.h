@@ -13,6 +13,7 @@ namespace Flow
             {
             case ParamUIType::Int:
                 return new IntParamEditor(
+                    p.label,
                     p.defaultValue.toInt(),
                     (int)p.minValue,
                     (int)p.maxValue,
@@ -21,6 +22,7 @@ namespace Flow
 
             case ParamUIType::Double:
                 return new DoubleParamEditor(
+                    p.label,
                     p.defaultValue.toDouble(),
                     p.minValue,
                     p.maxValue,
@@ -29,12 +31,16 @@ namespace Flow
                 );
 
             case ParamUIType::Bool:
-                return new BoolParamEditor(p.defaultValue.toBool());
+                return new BoolParamEditor(
+                    p.label,
+                    p.defaultValue.toBool()
+                );
 
             case ParamUIType::Combo:
             {
                 int defaultValue = p.defaultValue.toInt();
                 return new ComboParamEditor(
+                    p.label,
                     p.comboNames,
                     p.comboValues,
                     defaultValue
@@ -42,18 +48,24 @@ namespace Flow
             }
 
             case ParamUIType::Color:
-                return new ColorParamEditor(p.defaultValue.value<QColor>());
+                return new ColorParamEditor(
+                    p.label,
+                    p.defaultValue.value<QColor>()
+                );
 
             case ParamUIType::Curve:
             {
                 QJsonObject def = QJsonObject::fromVariantMap(
                     p.defaultValue.toMap()
                 );
-                return new CurveParamEditor(def);
+                return new CurveParamEditor(
+                    p.label,
+                    def
+                );
             }
 
             case ParamUIType::Label:
-                return new LabelParamEditor(p.defaultValue.toString());
+                return new LabelParamEditor(p.label);// +" : " + p.defaultValue.toString());
 
             }
 
