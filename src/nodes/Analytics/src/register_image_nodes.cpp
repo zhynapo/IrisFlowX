@@ -10,7 +10,6 @@
 #include "Contours/MinEnclosingCircle.hpp"
 #include "Contours/MinAreaRect.hpp"
 #include "Contours/PolygonApprox.hpp"
-#include "Contours/CombinedContoursNode.hpp"
 #include "Contours/AreaPerimeterFilter.hpp"
 #include "Contours/CircularityFilter.hpp"
 #include "Contours/SolidityFilter.hpp"
@@ -44,7 +43,6 @@ extern "C" NODE_PLUGIN_API bool register_flow_nodes(Flow::FlowRegistryContext* c
     REGISTER_NODE_IN_PLUGIN(MinEnclosingCircle);
     REGISTER_NODE_IN_PLUGIN(MinAreaRect);
     REGISTER_NODE_IN_PLUGIN(PolygonApprox);
-    REGISTER_NODE_IN_PLUGIN(CombinedContoursNode);
 
     REGISTER_NODE_IN_PLUGIN(AreaPerimeterFilter);
     REGISTER_NODE_IN_PLUGIN(CircularityFilter);
